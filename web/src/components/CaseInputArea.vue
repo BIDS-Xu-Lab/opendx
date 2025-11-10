@@ -70,7 +70,7 @@ const get_samples = () => {
                 v-model="input_text"
                 :rows="n_rows"
                 class="input-textarea w-full p-4 resize-none border-0 focus:outline-none"
-                placeholder="Describe a clinical case or question..."
+                placeholder="Describe your question related mCRPC guideline ..."
                 @input="onInputTextarea"
                 style="overflow: auto; max-height: 20rem;"
             ></textarea>
@@ -99,44 +99,6 @@ const get_samples = () => {
         </div>
     </div>
 
-    <!-- Samples -->
-    <div class="flex lg:flex-row max-sm:flex-col gap-4 mb-2 lg:w-1/2">
-
-        <Card v-for="sample in get_samples()" 
-            class="lg:w-1/3 cursor-pointer clickable-sample"
-            @click="onClickSample(sample)">
-            <template #title>
-                {{ sample?.section }}
-            </template>
-            <template #content>
-                <p class="m-0">
-                    {{ sample?.text }}
-                </p>
-            </template>
-        </Card>
-    </div>
-
-
-    <!-- More samples -->
-    <div class="flex flex-col items-center gap-4 mb-2 w-1/2 justify-center mt-4">
-        <p class="cursor-pointer" @click="onClickSeeMore">
-            See more case samples ... 
-            <template v-if="flag_show_more_samples">
-                <font-awesome-icon icon="fa-solid fa-chevron-up" />
-            </template>
-            <template v-else>
-                <font-awesome-icon icon="fa-solid fa-chevron-down" />
-            </template>
-        </p>
-
-        <template v-if="flag_show_more_samples">
-            <Fieldset legend="Type 2 Diabetes Mellitus">
-                <p class="m-0">
-                    
-                </p>
-            </Fieldset>
-        </template>
-    </div>
     
 </div>
 </template>

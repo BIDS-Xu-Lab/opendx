@@ -1,6 +1,6 @@
-# OpenMDX
+# OpenDX
 
-Open Medical Diagnosis Explorer
+Open Diagnosis
 
 # Backend Dev
 
