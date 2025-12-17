@@ -3,7 +3,7 @@ import { useDataStore } from '../stores/DataStore';
 import CaseInputArea from '../components/CaseInputArea.vue';
 import LeftSidebar from '../components/LeftSidebar.vue';
 import TopMenu from '../components/TopMenu.vue';
-const data_store = useDataStore();
+const store = useDataStore();
 
 </script>
 
@@ -18,7 +18,6 @@ const data_store = useDataStore();
         <div class="mt-16 items-center justify-center flex flex-col gap-4">
             <div class="font-bold text-6xl">
                 OpenDx
-                MedAgent
             </div>
             <div class="text-xl">
                 Find Evidence. Make Diagnosis.
