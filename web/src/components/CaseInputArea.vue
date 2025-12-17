@@ -10,27 +10,25 @@ const n_rows = ref(1);
 const case_store = useCaseStore();
 
 const onClickSubmit = () => {
-    // Load the first sample case for demo
-    const sampleCase = clinical_cases[0];
-    if (sampleCase) {
-        // Create a new case with only the first USER message for streaming demo
-        const firstUserMessage = sampleCase.messages.find(m => m.message_type === MessageType.USER);
-        if (firstUserMessage) {
-            const demoCase = {
-                ...sampleCase,
-                messages: [firstUserMessage],
-                evidence_snippets: sampleCase.evidence_snippets, // Keep evidence snippets
-                status: 'PROCESSING' as const,
-            };
-            case_store.setClinicalCase(demoCase);
-            // Navigate to analyze page
-            router.push('/analyze');
-        } else {
-            console.error('No user message found in sample case');
-        }
-    } else {
-        console.error('No sample case found');
+    // Check if user has entered text
+    if (!input_text.value.trim()) {
+        console.warn('No input text provided');
+        return;
     }
+
+    // Clear any existing case
+    case_store.setClinicalCase(null);
+
+    // Start the streaming process with user's input
+    const caseText = input_text.value.trim();
+    case_store.startStream(caseText);
+
+    // Clear the input
+    input_text.value = '';
+    n_rows.value = 1;
+
+    // Navigate to analyze page
+    router.push('/analyze');
 }
 
 const onClickSample = (sample: any) => {

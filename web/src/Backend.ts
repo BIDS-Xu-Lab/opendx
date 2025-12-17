@@ -166,102 +166,176 @@ export const backend = {
         }));
     },
 
-    streamCaseMockup(
-        case_id: string,
-        onMessage?: (message: Message) => void,
-        onDone?: (message: Message) => void,
-        onError?: (error: any) => void
-    ): EventSource {
-        // Mock EventSource-like object that simulates SSE streaming
-        // Uses setTimeout to send messages asynchronously without blocking the main thread
-        interface MockEventSource extends EventSource {
-            _readyState: number;
+    /**
+     * Chat with streaming SSE from backend
+     * @param caseText - Clinical case text
+     * @param onProgress - Callback for progress messages
+     * @param onResult - Callback for final result
+     * @param onError - Callback for errors
+     * @param onCaseCreated - Callback when case is created (receives case_id)
+     * @returns Object with close method to stop streaming
+     */
+    async chat(
+        caseText: string,
+        onProgress?: (message: string) => void,
+        onResult?: (data: any) => void,
+        onError?: (error: string) => void,
+        onCaseCreated?: (case_id: string) => void
+    ): Promise<{ close: () => void }> {
+        let isClosed = false;
+        let abortController = new AbortController();
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/chat`, {
+                method: 'POST',
+                headers: getAuthHeaders(),
+                body: JSON.stringify({ case_text: caseText }),
+                signal: abortController.signal,
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    onError?.('Unauthorized. Please sign in.');
+                    return { close: () => {} };
+                }
+                onError?.(`Failed to start chat: ${response.statusText}`);
+                return { close: () => {} };
+            }
+
+            const reader = response.body?.getReader();
+            if (!reader) {
+                onError?.('Failed to read response stream');
+                return { close: () => {} };
+            }
+
+            const decoder = new TextDecoder();
+
+            // Read stream
+            const processStream = async () => {
+                try {
+                    while (!isClosed) {
+                        const { done, value } = await reader.read();
+
+                        if (done) break;
+
+                        // Decode chunk and split by lines
+                        const chunk = decoder.decode(value, { stream: true });
+                        const lines = chunk.split('\n');
+
+                        for (const line of lines) {
+                            if (isClosed) break;
+
+                            if (line.startsWith('data: ')) {
+                                const dataStr = line.slice(6); // Remove "data: " prefix
+                                try {
+                                    const data = JSON.parse(dataStr);
+
+                                    if (data.type === 'case_created') {
+                                        onCaseCreated?.(data.case_id);
+                                    } else if (data.type === 'progress') {
+                                        onProgress?.(data.message);
+                                    } else if (data.type === 'result') {
+                                        onResult?.(data.data);
+                                    } else if (data.type === 'error') {
+                                        onError?.(data.message);
+                                        isClosed = true;
+                                    }
+                                } catch (e) {
+                                    console.error('Failed to parse SSE data:', dataStr, e);
+                                }
+                            }
+                        }
+                    }
+                } catch (error: any) {
+                    if (!isClosed && error.name !== 'AbortError') {
+                        console.error('Stream error:', error);
+                        onError?.(error.message || 'Stream connection error');
+                    }
+                } finally {
+                    reader.releaseLock();
+                }
+            };
+
+            // Start processing stream
+            processStream();
+
+            return {
+                close: () => {
+                    isClosed = true;
+                    abortController.abort();
+                },
+            };
+        } catch (error: any) {
+            if (error.name !== 'AbortError') {
+                console.error('Chat error:', error);
+                onError?.(error.message || 'Failed to connect to chat service');
+            }
+            return { close: () => {} };
+        }
+    },
+
+    /**
+     * Get chat history - all cases for the authenticated user
+     * @returns Promise with list of user's cases
+     */
+    async getHistory(): Promise<ClinicalCase[]> {
+        const response = await fetch(`${API_BASE_URL}/api/history`, {
+            headers: getAuthHeaders(),
+        });
+
+        if (!response.ok) {
+            if (response.status === 401) {
+                throw new Error('Unauthorized. Please sign in.');
+            }
+            throw new Error(`Failed to get history: ${response.statusText}`);
         }
 
-        const mockEventSource = {
-            _readyState: EventSource.CONNECTING,
-            get readyState() {
-                return this._readyState;
-            },
-            url: '',
-            withCredentials: false,
-            close: () => {},
-        } as MockEventSource;
+        const data = await response.json();
 
-        // Track if the stream is closed
-        let isClosed = false;
-        let messageIndex = 0;
+        // Transform to ClinicalCase objects
+        return data.cases.map((c: any) => ({
+            case_id: c.case_id,
+            status: c.status as any,
+            title: c.title,
+            evidence_snippets: [],
+            messages: [],
+            created_at: c.created_at,
+            updated_at: c.updated_at,
+        }));
+    },
 
-        // Get messages from sample case, excluding the first USER message
-        const sampleMessages = clinical_cases[0]!.messages.slice(1); // Skip first user message
+    /**
+     * Get full case data including messages and evidence
+     * @param case_id - The case ID
+     * @returns Promise with full case data
+     */
+    async getFullCase(case_id: string): Promise<ClinicalCase> {
+        const response = await fetch(`${API_BASE_URL}/api/cases/${case_id}/full`, {
+            headers: getAuthHeaders(),
+        });
 
-        // Function to send the next message
-        const sendNextMessage = () => {
-            if (isClosed) {
-                return;
+        if (!response.ok) {
+            if (response.status === 401) {
+                throw new Error('Unauthorized. Please sign in.');
             }
-            
-            // If all messages are sent, close the stream
-            if (messageIndex >= sampleMessages.length) {
-                onDone?.(sampleMessages[sampleMessages.length - 1]!);
-                mockEventSource._readyState = EventSource.CLOSED;
-                isClosed = true;
-                return;
+            if (response.status === 404) {
+                throw new Error('Case not found or you don\'t have access to this case');
             }
+            throw new Error(`Failed to get case: ${response.statusText}`);
+        }
 
-            const message = sampleMessages[messageIndex];
-            if (!message) {
-                return;
-            }
-            messageIndex++;
+        const data = await response.json();
 
-            // Use setTimeout to ensure non-blocking execution
-            setTimeout(() => {
-                if (isClosed) {
-                    return;
-                }
-
-                try {
-                    switch (message.stage) {
-                        case MessageStage.THINKING:
-                            onMessage?.(message);
-                            break;
-
-                        case MessageStage.FINAL:
-                            onDone?.(message);
-                            mockEventSource._readyState = EventSource.CLOSED;
-                            isClosed = true;
-                            return; // Stop sending more messages
-
-                        case 'error':
-                            onError?.(new Error(message.text || 'Stream error'));
-                            mockEventSource._readyState = EventSource.CLOSED;
-                            isClosed = true;
-                            return;
-                    }
-
-                    // Schedule next message (vary delay between 3-5 seconds)
-                    const delay = 1000 + Math.random() * 500;
-                    setTimeout(sendNextMessage, delay);
-                } catch (error) {
-                    console.error('Error in mock stream:', error);
-                    onError?.(error);
-                    isClosed = true;
-                }
-            }, 0);
+        // Transform to ClinicalCase object
+        return {
+            case_id: data.case_id,
+            status: data.status as any,
+            title: data.title,
+            messages: data.messages || [],
+            evidence_snippets: data.evidence_snippets || [],
+            created_at: data.created_at,
+            updated_at: data.updated_at,
         };
-
-        // Override close method
-        mockEventSource.close = () => {
-            isClosed = true;
-            mockEventSource._readyState = EventSource.CLOSED;
-        };
-
-        // Start streaming after a short delay to simulate connection establishment
-        mockEventSource._readyState = EventSource.OPEN;
-        setTimeout(sendNextMessage, 100);
-
-        return mockEventSource as EventSource;
     },
 
     /**

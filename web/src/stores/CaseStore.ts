@@ -289,40 +289,104 @@ export const useCaseStore = defineStore('case', {
             URL.revokeObjectURL(url);
         },
 
-        startMockupStream() {
-            if (!this.clinical_case || this.is_streaming) {
+        async startStream(caseText: string) {
+            if (this.is_streaming) {
                 return;
             }
 
             this.is_streaming = true;
             this.final_message_typing_text = null;
 
-            // Clear existing messages except the first USER message
-            if (this.clinical_case.messages.length > 0) {
-                const firstMessage = this.clinical_case.messages[0];
-                if (firstMessage) {
-                    this.clinical_case.messages = [firstMessage];
-                }
-            }
-
-            const eventSource = backend.streamCaseMockup(
-                this.clinical_case.case_id,
-                (message: Message) => {
-                    // Handle intermediate messages
-                    this.addMessage(message);
-                },
-                (message: Message) => {
-                    // Handle final message - start typing animation
-                    this.handleFinalMessage(message);
-                    this.is_streaming = false;
-                },
-                (error: any) => {
-                    console.error('Stream error:', error);
-                    this.is_streaming = false;
-                }
+            // Create initial clinical case with user message
+            const user_message = createEmptyMessage(
+                'user',
+                MessageType.USER,
+                caseText,
             );
 
-            this.stream_event_source = eventSource;
+            this.clinical_case = createEmptyClinicalCase({
+                title: caseText.substring(0, 100),
+                messages: [user_message],
+            });
+
+            try {
+                // Start chat stream from backend
+                const stream = await backend.chat(
+                    caseText,
+                    (message: string) => {
+                        // Handle progress messages
+                        const progressMessage = createEmptyMessage(
+                            'system',
+                            MessageType.SYSTEM,
+                            message,
+                            {},
+                            MessageStage.THINKING
+                        );
+                        this.addMessage(progressMessage);
+                    },
+                    (data: any) => {
+                        // Handle result data
+                        const resultText = data.overall_reasoning || '';
+
+                        // Create final agent message
+                        const finalMessage = createEmptyMessage(
+                            'agent',
+                            MessageType.AGENT,
+                            resultText,
+                            data,
+                            MessageStage.FINAL
+                        );
+
+                        // Handle final message with typing animation
+                        this.handleFinalMessage(finalMessage);
+                        this.is_streaming = false;
+
+                        // Update case status
+                        if (this.clinical_case) {
+                            this.clinical_case.status = 'COMPLETED' as any;
+                        }
+                    },
+                    (error: string) => {
+                        // Handle errors
+                        console.error('Stream error:', error);
+                        const errorMessage = createEmptyMessage(
+                            'system',
+                            MessageType.SYSTEM,
+                            `Error: ${error}`,
+                            {},
+                            'error' as any
+                        );
+                        this.addMessage(errorMessage);
+                        this.is_streaming = false;
+
+                        // Update case status
+                        if (this.clinical_case) {
+                            this.clinical_case.status = 'ERROR' as any;
+                        }
+                    },
+                    (case_id: string) => {
+                        // Handle case created
+                        if (this.clinical_case) {
+                            this.clinical_case.case_id = case_id;
+                            this.clinical_case.status = 'PROCESSING' as any;
+                        }
+                    }
+                );
+
+                // Store stream reference for cleanup
+                this.stream_event_source = stream as any;
+            } catch (error: any) {
+                console.error('Failed to start stream:', error);
+                const errorMessage = createEmptyMessage(
+                    'system',
+                    MessageType.SYSTEM,
+                    `Failed to connect: ${error.message}`,
+                    {},
+                    'error' as any
+                );
+                this.addMessage(errorMessage);
+                this.is_streaming = false;
+            }
         },
 
         handleFinalMessage(message: Message) {

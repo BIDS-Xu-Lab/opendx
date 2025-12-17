@@ -1,5 +1,6 @@
 # APP configs
 VITE_BASE_URL=./
+VITE_API_URL=http://localhost:9627
 
 # SUPABASE configs
 VITE_SUPABASE_URL=

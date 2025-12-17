@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue';
+import { useRoute } from 'vue-router';
 import { useDataStore } from '../stores/DataStore';
 import { useCaseStore } from '../stores/CaseStore';
 import LeftSidebar from '../components/LeftSidebar.vue';
@@ -8,8 +9,10 @@ import type { Message } from '../models/ClinicalCase';
 import { marked } from 'marked';
 import { useToast } from 'primevue/usetoast';
 import { clinical_cases as sample_clinical_cases } from '../models/Samples';
+import { backend } from '../Backend';
 
 const toast = useToast();
+const route = useRoute();
 
 // PrimeVue components
 import Button from 'primevue/button';
@@ -60,19 +63,20 @@ const toggleEvidenceToolbarMenu = (event: Event) => {
     evidence_toolbar_menu_ref.value.toggle(event);
 };
 
+// Computed for input disabled state
+const isInputDisabled = computed(() => {
+    // Disable if streaming or if case already has status (submitted)
+    return case_store.is_streaming ||
+           (case_store.clinical_case?.status === 'COMPLETED' ||
+            case_store.clinical_case?.status === 'PROCESSING');
+});
+
 // Methods
 const handleSubmitMessage = () => {
-    if (case_store.input_text.trim()) {
-        const new_message: Message = {
-            message_id: `msg_${Date.now()}`,
-            from_id: 'user_001',
-            message_type: MessageType.USER,
-            text: case_store.input_text,
-            created_at: new Date().toISOString(),
-            stage: 'input'
-        };
-        case_store.addMessage(new_message);
-        case_store.setInputText('');
+    if (case_store.input_text.trim() && !isInputDisabled.value) {
+        const caseText = case_store.input_text.trim();
+        case_store.setInputText('');  // Clear input immediately
+        case_store.startStream(caseText);  // Start real backend streaming
     }
 };
 
@@ -153,22 +157,29 @@ watch(() => case_store.rendered_messages.length, async () => {
 });
 
 // Initialize case data
-onMounted(() => {
-    if (case_store.clinical_case == null) {
-        case_store.setClinicalCase(sample_clinical_cases[0]!);
-    }
-
+onMounted(async () => {
     case_store.cite_popup_ref = cite_popup_ref.value;
 
-    // Start streaming if case exists and not already streaming
-    if (case_store.clinical_case && !case_store.is_streaming) {
-        // Only start streaming if there's only the user message (no agent responses yet)
-        const userMessages = case_store.clinical_case.messages.filter(
-            m => m.message_type === MessageType.USER
-        );
-        if (userMessages.length > 0 && case_store.clinical_case.messages.length === userMessages.length) {
-            case_store.startMockupStream();
+    // Check if we have a case_id in route params
+    const caseId = route.params.case_id as string | undefined;
+
+    if (caseId) {
+        // Load existing case from backend
+        try {
+            const fullCase = await backend.getFullCase(caseId);
+            case_store.setClinicalCase(fullCase);
+        } catch (error: any) {
+            console.error('Failed to load case:', error);
+            toast.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: error.message || 'Failed to load case',
+                life: 5000
+            });
         }
+    } else {
+        // Start with empty case for new sessions
+        case_store.setClinicalCase(null);
     }
 
     // Scroll to bottom on initial mount
@@ -388,30 +399,34 @@ onBeforeUnmount(() => {
 <div class="chat-footer w-full border-t pl-4 pr-2 py-4">
     <div class="flex flex-col gap-2">
         <!-- Input area -->
-        <Textarea 
+        <Textarea
             v-model="case_store.input_text"
-            placeholder="Type your follow-up question here..."
+            :placeholder="isInputDisabled ? 'This case has been submitted. You can only ask once per case.' : 'Type your clinical case here...'"
             :auto-resize="true"
+            :disabled="isInputDisabled"
             rows="1"
             style="max-height: 10rem;"
             class="w-full"
             @keydown.enter.prevent="handleSubmitMessage" />
-        
+
         <!-- Action buttons -->
         <div class="flex justify-between items-center">
             <div class="flex gap-2">
-                <Button icon="pi pi-upload" size="small" class="p-button-text" />
-                <Button icon="pi pi-search" size="small" class="p-button-text" />
+                <Button icon="pi pi-upload" size="small" class="p-button-text" :disabled="isInputDisabled" />
+                <Button icon="pi pi-search" size="small" class="p-button-text" :disabled="isInputDisabled" />
             </div>
             <div class="flex gap-2">
-                <Button 
-                    icon="pi pi-microphone" 
-                    size="small" 
+                <Button
+                    icon="pi pi-microphone"
+                    size="small"
                     :class="{ 'p-button-warning': case_store.is_recording }"
+                    :disabled="isInputDisabled"
                     @click="case_store.toggleRecording" />
-                <Button 
-                    icon="pi pi-send" 
-                    size="small" 
+                <Button
+                    icon="pi pi-send"
+                    size="small"
+                    :disabled="isInputDisabled"
+                    :loading="case_store.is_streaming"
                     @click="handleSubmitMessage" />
             </div>
         </div>

@@ -22,7 +22,7 @@ const fetchCases = async () => {
 
     try {
         console.log('[CaseHistory] Fetching cases from backend...');
-        const fetchedCases = await backend.getCases();
+        const fetchedCases = await backend.getHistory();
         console.log('[CaseHistory] Fetched cases:', fetchedCases.length);
 
         cases.value = fetchedCases;
