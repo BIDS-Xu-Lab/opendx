@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Aurora from '../components/backgrounds/Aurora.vue';
 import { useDataStore } from '../stores/DataStore';
 import CaseInputArea from '../components/CaseInputArea.vue';
 import LeftSidebar from '../components/LeftSidebar.vue';
@@ -11,18 +10,6 @@ const data_store = useDataStore();
 <template>
 <LeftSidebar />
 <div class="main-container">
-    <div class="bg-container">
-        <Aurora 
-            :color-stops="data_store.isDarkMode() ? 
-                ['#172d40', '#0f210d', '#2d1b0b'] : 
-                ['#bcdefb', '#ffe666', '#e0b3ff']"
-            :amplitude="1.0"
-            :blend="0.5"
-            :speed="1.0"
-            :intensity="1.0"
-            class="w-full h-full"
-        />
-    </div>
 
     <TopMenu />
 
@@ -30,10 +17,11 @@ const data_store = useDataStore();
     <div class="main-content flex flex-col items-center justify-center">
         <div class="mt-16 items-center justify-center flex flex-col gap-4">
             <div class="font-bold text-6xl">
+                OpenDx
                 MedAgent
             </div>
             <div class="text-xl">
-                Transforming Clinical Questions into Diagnostic Insights
+                Find Evidence. Make Diagnosis.
             </div>
         </div>
 

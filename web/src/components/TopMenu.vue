@@ -33,27 +33,6 @@ const onClickSignOut = async () => {
 <MegaMenu :model="items" style="border-radius: 0; border: none; background: transparent;">
     <template #start>
     </template>
-    <!-- 
-    <template #item="{ item }">
-        <a v-if="item.root" class="flex items-center cursor-pointer px-4 py-2 overflow-hidden relative font-semibold text-lg uppercase" style="border-radius: 2rem">
-            <span>{{ item.label }}</span>
-        </a>
-        <a v-else-if="!item.image" class="flex items-center p-4 cursor-pointer mb-2 gap-3">
-            <span class="inline-flex items-center justify-center rounded-full bg-primary text-primary-contrast w-12 h-12">
-                <i :class="[item.icon, 'text-lg']"></i>
-            </span>
-            <span class="inline-flex flex-col gap-1">
-                <span class="font-bold text-lg">{{ item.label }}</span>
-                <span class="whitespace-nowrap">{{ item.subtext }}</span>
-            </span>
-        </a>
-        <div v-else class="flex flex-col items-start gap-4 p-2">
-            <img alt="megamenu-demo" :src="item.image" class="w-full" />
-            <span>{{ item.subtext }}</span>
-            <Button :label="item.label" variant="outlined" />
-        </div> 
-    </template>
-    -->
     <template #end>
         <div v-if="!isLoggedIn" class="flex items-center gap-2">
             <Button size="small"

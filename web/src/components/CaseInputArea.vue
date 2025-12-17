@@ -91,7 +91,7 @@ const get_samples = () => {
                 v-model="input_text"
                 :rows="n_rows"
                 class="input-textarea w-full p-4 resize-none border-0 focus:outline-none"
-                placeholder="Describe a clinical case or question..."
+                placeholder="Describe your question related mCRPC guideline ..."
                 @input="onInputTextarea"
                 style="overflow: auto; max-height: 20rem;"
             ></textarea>

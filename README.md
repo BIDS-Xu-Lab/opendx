@@ -1,31 +1,12 @@
-# Clinical Case API
+# OpenDX
 
-A minimal chat system with streaming support for clinical case analysis.
+Open Diagnosis
 
-## Architecture
+# Backend Dev
 
-- **Database**: SQLite with SQLModel (SQLAlchemy + Pydantic) for type-safe models
-- **API Server**: FastAPI with SSE (Server-Sent Events) for streaming
-- **Job Queue**: Python RQ with Redis backend
-- **Agent**: Mockup agent that simulates clinical reasoning
+# Frontend Dev
 
-## Components
-
-- `database.py` - SQLModel database models and functions
-- `server.py` - FastAPI server with endpoints
-- `worker.py` - RQ worker that listens to queue and processes cases
-- `mockup_agent.py` - Simulated agent that generates responses
-
-## Setup
-
-### 1. Install Dependencies
-
-```bash
-cd api
-pip install -r requirements.txt
-```
-
-### 2. Install and Start Redis
+Then, go to web and install:
 
 ```bash
 # macOS with Homebrew

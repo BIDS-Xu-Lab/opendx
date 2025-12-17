@@ -72,7 +72,7 @@ onMounted(() => {
             <div class="flex flex-col items-center gap-2 w-full">
                 <div class="text-surface-900 dark:text-surface-0 text-2xl font-semibold leading-tight text-center w-full">
                     <font-awesome-icon icon="fa-solid fa-door-open" />
-                    Welcome to OpenMDX
+                    Welcome to OpenDx
                 </div>
             </div>
         </div>
