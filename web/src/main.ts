@@ -86,17 +86,35 @@ darkModeMediaQuery.addEventListener('change', handleThemeChange);
 store.init();
 
 ///////////////////////////////////////////////////////////
-// Router
+// Initialize Authentication and Mount App
 ///////////////////////////////////////////////////////////
-// bind router with store for navigation
-router.beforeEach((to, from, next) => {
-    console.log('from', from, 'to', to)
-    // set the store.current_page
-    store.current_page = to.path.substring(1)
-    next()
-})
+// Initialize authentication BEFORE mounting the app
+// This ensures the JWT token is available for API calls on page load
+(async () => {
+    console.log('[App] Initializing authentication...');
+    await user_store.initializeAuth();
+    console.log('[App] Authentication initialized, isLoggedIn:', user_store.isLoggedIn);
 
+    // Setup navigation guards AFTER auth is initialized
+    // This ensures session is restored before checking authentication
+    router.beforeEach((to, from, next) => {
+        console.log('[Router] Navigation:', from.path, '->', to.path);
 
+        // Update store with current page
+        store.current_page = to.path.substring(1);
 
-// finally, mount the app
-app.mount('#app');
+        // Check if the route requires authentication
+        if (to.meta.requiresAuth && !user_store.isLoggedIn) {
+            console.log('[Router] Route requires auth but user not logged in, redirecting to /login');
+            // Redirect to login page
+            next('/login');
+        } else {
+            // Allow navigation
+            next();
+        }
+    });
+
+    // Now mount the app
+    app.mount('#app');
+    console.log('[App] App mounted');
+})();

@@ -23,6 +23,7 @@ declare module 'vue' {
     LeftSidebar: typeof import('./src/components/LeftSidebar.vue')['default']
     MegaMenu: typeof import('primevue/megamenu')['default']
     Menu: typeof import('primevue/menu')['default']
+    Message: typeof import('primevue/message')['default']
     Password: typeof import('primevue/password')['default']
     Popover: typeof import('primevue/popover')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

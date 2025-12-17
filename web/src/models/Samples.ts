@@ -346,17 +346,769 @@ export const questions = [
 ];
 
 // Sample Clinical Case: Complex Heart Failure with Multiple Comorbidities (revised)
-export const clinical_case = {
+export const clinical_cases = [
+{
+    case_id: "case_facial_swelling_aftercare",
+    status: ClinicalCaseStatus.COMPLETED,
+    title: "Facial Swelling Aftercare",
+
+    evidence_snippets: [
+    {
+        snippet_id: "1",
+        text:
+            "Vlachodimitropoulos A, Gatsounia A, Danielides G, Dafni C, Lygeros S. Bilateral Peritonsillar Abscess Secondary to Infectious Mononucleosis. Cureus. 2025 Sep 22;17(9):e92958. doi: 10.7759/cureus.92958. PMID: 41133070; PMCID: PMC12543371.",
+        source_id: "41133070",
+        source_type: "pubmed",
+        source_citation: "Vlachodimitropoulos A, Gatsounia A, Danielides G, Dafni C, Lygeros S. Bilateral Peritonsillar Abscess Secondary to Infectious Mononucleosis. Cureus. 2025 Sep 22;17(9):e92958. doi: 10.7759/cureus.92958. PMID: 41133070; PMCID: PMC12543371.",
+        created_at: "2024-01-15T08:30:00Z",
+    },
+    {
+        snippet_id: "2",
+        text: "A 19-year-old transgender adolescent on hormonal therapy with a history of recent hospitalization for exudative tonsillitis presented with worsening sore throat, dysphagia, fever, and a diffuse, generalized macular rash involving the back, face, abdomen, arms, and legs. Despite prior antibiotic treatment with amoxicillin, her symptoms recurred, prompting further evaluation. Laboratory findings revealed leukocytosis with lymphocytic and monocytic predominance, elevated inflammatory markers, and a positive Epstein-Barr virus (EBV) test, confirming infectious mononucleosis. Imaging demonstrated persistent tonsillitis without abscess formation, and additional testing identified concurrent herpes simplex virus (HSV)-1 oral ulcers. Given persistent fevers and systemic inflammation, hemophagocytic lymphohistiocytosis (HLH) was considered but not confirmed. Management included IV clindamycin for tonsillitis, corticosteroids for airway inflammation, and doxycycline for atypical pneumonia. Over the 10-day hospitalization, the patient showed gradual improvement, with resolution of the rash and all other symptoms. The rash was ultimately diagnosed as an amoxicillin-induced rash associated with EBV infection. This case highlights the importance of recognizing amoxicillin-induced rash in EBV infection and distinguishing it from allergic reactions and other common rashes, including but not limited to scarlet fever, viral exanthem, drug reactions, and HLH. Although various skin rashes are common in the transgender population, a literature review found no evidence linking amoxicillin-induced EBV rash to transgender patients. Accurate diagnosis aids in the appropriate selection of antimicrobial therapy and helps avoid unnecessary antibiotic restrictions due to misattributed allergic reactions.",
+        source_id: "40786360",
+        source_type: "pubmed",
+        source_citation: "Gujar AA, Pernudi K, Adeyinka A, Kondamudi N. Epstein-Barr Virus (EBV) Masquerading as Exudative Tonsillitis and Rash in a Transgender Adolescent. Cureus. 2025 Jul 11;17(7):e87737. doi: 10.7759/cureus.87737. PMID: 40786360; PMCID: PMC12335877.",
+        created_at: "2024-01-15",
+    },
+    {
+        snippet_id: "3",
+        text:
+            "Infectious mononucleosis (IM), caused by the Epstein-Barr virus (EBV), is primarily a self-limiting illness. However, it often mimics bacterial infections, such as bacterial tonsillitis, which can represent a diagnostic pitfall and, consequently, increase the risk of developing complications. The aim of this case report is to highlight the complications resulting from the incorrect differential diagnosis of EBV-induced IM and its clinical significance. We present the case of a 24-year-old male who was initially misdiagnosed with bacterial tonsillitis. Amoxicillin-clavulanic acid was initiated for treatment, after which he developed a widespread maculopapular rash. Acute EBV infection was diagnosed via serological tests. His condition improved following the discontinuation of antibiotic therapy and the administration of supportive symptomatic treatment. This case underscores the critical need for careful differential diagnosis between viral and bacterial tonsillitis. It demonstrates that an amoxicillin-clavulanic acid-induced rash can serve as an important clue for underlying EBV infection, thereby preventing unnecessary antibiotic use and enabling the correct direction of investigation and management.",
+        source_id: "40895910",
+        source_type: "pubmed",
+        source_citation: "Chaprava T, Ostatishvili K, Kirtadze N, Goginava A, Tabatadze I. Amoxicillin-Clavulanic Acid-Induced Rash in Epstein-Barr Virus Infection: A Case Report of a Diagnostic Pitfall in a 24-Year-Old Male. Cureus. 2025 Jul 29;17(7):e89023. doi: 10.7759/cureus.89023. PMID: 40895910; PMCID: PMC12398297.",
+        created_at: "2024-01-15",
+    },
+    {
+        snippet_id: "4",
+        text: `Background: Lymphadenopathy refers to any disease process involving lymph nodes that are abnormal in size and consistency. There are multiple etiologies in the setting of a diseased lymph node, including conditions of infection, autoimmune diseases, and neoplasia. Lymphadenitis is a term that refers to lymphadenopathies that are due to inflammatory processes and can represent an acute bacterial infection resulting from streptococcal pharyngitis or a prior viral upper respiratory infection. Cervical lymphadenopathy refers to nodal swelling in the neck region. While cervical lymphadenitis is a common clinical finding in the setting of a transient response to a benign local or generalized infection, it may evade detection sometimes and thus account for a percentage of misdiagnosis or delayed diagnosis in the tropics. This case report is aimed at increasing the awareness about the presentation of bacterial cervical lymphadenitis and how it can sometimes mimic the presentation that is typical and regularly found with plasmodiasis. It contributes to improved awareness and high index of suspicion in clinic when dealing with patients in the tropics.
+
+Case presentation: We present a case of delayed diagnosis of bacterial cervical lymphadenitis that initially presented with typical features of malaria from Plasmodium falciparum. A 26-year-old Nigerian woman presented to the outpatient department following complaints of a recurring fever of a month's duration and bilateral neck swelling of about 2 weeks prior to presentation.
+
+Conclusion: In the setting of a busy clinic, details are easily missed and salient features in the presentation of a patient that are needed for accurate diagnosis and management could go unrecognized. Hence, this case report highlights the importance of proper examination particularly of lymph nodes and use of different diagnostic modalities for the exact diagnosis of disease.
+
+Keywords: Cervical; Delayed diagnosis; Fine needle aspiration cytology (FNAC); Lymphadenitis; Lymphadenopathy; Neck swelling.`,
+        source_id: "36755272",
+        source_type: "pubmed",
+        source_citation: "Olaniyi O, Ayotunde O, Christabel T, Idowu O. Delayed diagnosis of bacterial cervical lymphadenitis in the tropics: a case report. J Med Case Rep. 2023 Feb 9;17(1):41. doi: 10.1186/s13256-023-03773-9. PMID: 36755272; PMCID: PMC9909935.",
+        created_at: "2024-01-15",
+    },
+    {
+        snippet_id: "5",
+        text:
+            "Necrotizing lymphadenitis (NL) is a rare entity that can occur as a complication of bacterial cervical lymphadenitis (CL) and is characterized by unilateral or bilateral cervical lymphadenopathy. NL most commonly presents in females and most reports have been in Japan. In this case, we present a 37-year-old male with no significant past medical history who presented with an unusual presentation and clinical course of NL. Initial workup for Epstein-Barr Virus (EBV) and other infectious etiology was negative. Yet, aspiration later revealed Group A Streptococcus. When the patient's pain and swelling did not subside with the initial antibiotic and supportive treatment, the patient underwent a repeat aspiration and biopsy that revealed a necrotic mass or lymph node. NL is uncommon and rarely due to infectious etiology. However, this marks a case in which a Group A Streptococcus was shown to be associated with subsequent necrotic lymph nodes and should allow practitioners to further consider an infectious etiology in the differential diagnosis of NL.",
+        source_id: "36793849",
+        source_type: "pubmed",
+        source_citation: "De Paz N, Pupo A, Frankel LR, Roorda SL, Hernandez R. Group A Streptococcus Necrotizing Lymphadenitis: A Case Report. Cureus. 2023 Jan 12;15(1):e33699. doi: 10.7759/cureus.33699. PMID: 36793849; PMCID: PMC9925034.",
+        created_at: "2024-01-15",
+    },
+    {
+        snippet_id: "6",
+        text: `Objective: To identify patient and hospital characteristics associated with the choice of treatment for pediatric patients who present in the acute setting with peritonsillar abscess/cellulitis (PTA/PTC).
+
+Study design: A retrospective cohort study was performed using Healthcare Cost and Utilization Project emergency department, ambulatory, and inpatient state databases for the years 2010 and 2011. Children aged 0 to 17 years were identified using International Classification of Diseases, Ninth Revision, Clinical Modification (ICD-9-CM) diagnosis code for PTA/PTC. The main outcome of interest was treatment received, which included medical therapy alone, incision and drainage (IND) or tonsillectomy. Multiple logistic regression analyses were conducted to model non-clinical factors associated with treatment received after adjusting for age, hospital state, race, primary expected payer, existing chronic condition(s), and type of hospital.
+
+Results: We identified 2994 patients who presented with PTA/PTC. The most common treatment choice was medical therapy alone (30.8%), followed by IND (30.5%) and tonsillectomy (9.4%). There were significant associations between treatment choice and race, primary payer status, and type of hospital (P < .05). We found that Hispanic patients, those with Medicaid as their primary expected payer, and those treated at a designated children's hospital were 3 nonclinical factors independently associated with an increase in likelihood of receiving tonsillectomy as treatment.
+
+Conclusion: There are important nonclinical factors associated with treatment of children who present in the acute setting with PTA/PTC. Additional research is recommended to understand these observed differences in care and how they may affect health outcomes.
+
+Keywords: peritonsillar abscess/peritonsillar cellulitis (PTA/PTC); tonsillectomy.`,
+        source_id: "25589309",
+        source_type: "pubmed",
+        source_citation: "Nguyen T, Haberland CA, Hernandez-Boussard T. Pediatric Patient and Hospital Characteristics Associated With Treatment of Peritonsillar Abscess and Peritonsillar Cellulitis. Clin Pediatr (Phila). 2015 Nov;54(13):1240-6. doi: 10.1177/0009922814565884. Epub 2015 Jan 14. PMID: 25589309.",
+        created_at: "2024-01-15",
+    },
+    {
+        snippet_id: "7",
+        text:
+            "Accidental ingestion and overdose of medications used in thyroidal illnesses may occur because of the frequency of these diagnoses. This review discusses acute overdosage of 4 groups of medicines. Acute ingestion of thyroid replacement medications occurs very frequently. Overdosage in children is usually asymptomatic and a benign condition; after evacuation of the stomach, propranolol may be used to treat symptomatic children. Other therapeutic regimens are rarely indicated in this age group. Ingestions of large amounts of antithyroid medications occur very rarely and limited information regarding treatment is available in the medical literature. Acute ingestion of iodine often results in corrosive injury of the gastrointestinal tract and renal damage. Cardiopulmonary collapse secondary to circulatory failure, oedema of the epiglottis and aspiration pneumonias may cause death. Administration of starch and sodium thiosulphate, maintenance of airway and stabilisation of circulation are the major components of therapy. Acute overdosage of beta-blockers is uncommon but can be lethal. Patients may appear well initially but they can suddenly develop convulsions and profound cardiovascular collapse requiring instant aggressive therapy. Potassium and glucose concentrations should be monitored. The usage of atropine, isoprenaline (isoproterenol), glucagon and prenalteral is discussed.",
+        source_id: "2460721",
+        source_type: "pubmed",
+        source_citation: "Lin TH, Kirkland RT, Kirkland JL. Clinical features and management of overdosage with thyroid drugs. Med Toxicol Adverse Drug Exp. 1988 Jul-Aug;3(4):264-72. doi: 10.1007/BF03259939. PMID: 2460721.",
+        created_at: "2024-01-15",
+    },
+    {
+        snippet_id: "8",
+        text: "Retropharyngeal Abscess: A Subtle Presentation of a Deep Space Neck Infection",
+        source_id: "",
+        source_type: "pubmed",
+        source_citation: "Argintaru N, Carr D. Retropharyngeal Abscess: A Subtle Presentation of a Deep Space Neck Infection. J Emerg Med. 2017 Oct;53(4):568-569. doi: 10.1016/j.jemermed.2017.06.004. PMID: 29079072.",
+        created_at: "2024-01-15",
+    },
+    ],
+    messages: [
+        createEmptyMessage(
+            "user_001",
+            MessageType.USER,
+            `Patient presents with **Facial Swelling**: Swelling noted to the right side of the neck with complaints of right ear and right-sided sore throat pain. States hard to swallow due to pain. Handling secretions without issue.
+
+### HPI / PE
+
+**XX-year-old male** presents with facial swelling, reports that the right side of his neck and right ear have been hurting for the last few days, and states he has been unable to sleep. Pain worsens with swallowing. Denies any sick contacts, fevers, or chills.
+
+**Vital Signs**
+
+| BP      | Pulse | Resp | Temp            | SpO2 | Height  | Weight   | BMI        |
+|---------|-------|------|-----------------|------|---------|----------|------------|
+| 138/78  | 71    | 17   | 98.9 °F (37.2 °C) (Temporal) | 96%  | 5'7" (1.702 m) | 76.5 kg  | 26.41 kg/m² |
+
+**Physical Exam**
+
+- **Constitutional:** Not in acute distress. Normal appearance. **HENT:** Normocephalic. Moist mucous membranes. Posterior oropharyngeal erythema present. **Eyes:** Extraocular movements intact. Pupils equal, round, reactive to light.**Cardiovascular:** Normal rate and regular rhythm. **Pulmonary:** Normal effort and breath sounds. **Abdomen:** Flat. No distension. **Musculoskeletal:** No swelling or tenderness. Normal range of motion. **Skin:** Warm. Capillary refill < 2 seconds. **Neurological:** No focal deficit. Alert.
+
+**Procedures / Attestation**
+
+- Clinical impression as of DATE 0007: **Pharyngitis, unspecified etiology**
+- **ED Disposition:** Discharge
+`,
+        ),
+
+        createEmptyMessage(
+            "system",
+            MessageType.SYSTEM,
+            "Generating initial differential diagnosis list with preliminary reasoning analysis.",
+            {
+                event_name: "agent_running",
+                agent_id: "multi_specialist_agent",
+                agent_name: "Multi-Specialist Agent",
+                status: "running",
+            },
+            "thinking",
+        ),
+
+        createEmptyMessage(
+            "system",
+            MessageType.SYSTEM,
+            "Extracting symptoms that require special attention.",
+            {
+                event_name: "agent_running",
+                agent_id: "warning_agent",
+                agent_name: "Warning Agent",
+                status: "running",
+            },
+            "thinking",
+        ),
+
+        createEmptyMessage(
+            "system",
+            MessageType.SYSTEM,
+            "Matching symptoms with \"should not miss\" disease guidelines, ranking the \"should not miss\" diagnosis list, and collecting the differential diagnosis list and \"should not miss\" diagnosis list.",
+            {
+                event_name: "agent_running",
+                agent_id: "context_review_agent",
+                agent_name: "Context Review Agent",
+                status: "running",
+            },
+            "thinking",
+        ),
+
+        createEmptyMessage(
+            "system",
+            MessageType.SYSTEM,
+            "Grouping similar diagnoses and reducing duplication.",
+            {
+                event_name: "agent_running",
+                agent_id: "context_review_agent",
+                agent_name: "Context Review Agent",
+                status: "running",
+            },
+            "thinking",
+        ),
+
+        createEmptyMessage(
+            "system",
+            MessageType.SYSTEM,
+            "Searching PubMed results for each diagnosis in the list.",
+            {
+                event_name: "agent_running",
+                agent_id: "diagnosis_reasoning_agent",
+                agent_name: "Diagnosis Reasoning Agent",
+                status: "running",
+            },
+            "thinking",
+        ),
+
+        createEmptyMessage(
+            "system",
+            MessageType.SYSTEM,
+            "Matching diagnostic evidence with the patient case, providing confidence levels, and generating supporting evidence.",
+            {
+                event_name: "agent_running",
+                agent_id: "diagnosis_reasoning_agent",
+                agent_name: "Diagnosis Reasoning Agent",
+                status: "running",
+            },
+            "thinking",
+        ),
+
+        createEmptyMessage(
+            "system",
+            MessageType.SYSTEM,
+            "Aggregating all diagnostic reasoning results, re-ranking the diagnosis list, and generating a final reasoning summary.",
+            {
+                event_name: "agent_running",
+                agent_id: "overall_reasoning_agent",
+                agent_name: "Overall Reasoning Agent",
+                status: "running",
+            },
+            "thinking",
+        ),
+
+        createEmptyMessage(
+            "system",
+            MessageType.SYSTEM,
+            "Providing additional actions required for each diagnosis.",
+            {
+                event_name: "agent_running",
+                agent_id: "diagnostic_action_agent",
+                agent_name: "Diagnostic Action Agent",
+                status: "running",
+            },
+            "thinking",
+        ),
+
+        createEmptyMessage(
+            "system",
+            MessageType.SYSTEM,
+            "Compiling all actions and the final reasoning report, then generating the comprehensive management plan for the patient.",
+            {
+                event_name: "agent_running",
+                agent_id: "management_agent",
+                agent_name: "Management Agent",
+                status: "running",
+            },
+            "thinking",
+        ),
+
+        createEmptyMessage(
+            "agent",
+            MessageType.AGENT,
+            `
+
+
+
+<table>
+<tr>
+    <td>
+<h3>Top-3 Diagnosis</h3>
+
+<ul>
+<li>Viral Infections of the Throat</li>
+<li>Acute unilateral cervical lymphadenitis (likely bacterial</li>
+<li>Right peritonsillar cellulitis (early peritonsillar abscess)</li>
+</ul>
+    </td>
+    <td>
+<h3>Top-3 "Should Not Miss" Diagnosis</h3>
+
+<ul>
+<li>Epiglottitis</li>
+<li>Retropharyngeal abscess</li>
+<li>Peritonsillar abscess</li>
+</ul>
+    </td>
+</tr>
+</table>
+
+---
+
+## Clinical Reasoning
+
+**Summary:**  
+Right-sided sore throat with ipsilateral ear/neck swelling, normal vitals, and intact secretion handling most likely reflects pharyngitis with reactive/bacterial cervical lymphadenitis. Early peritonsillar infection remains possible. Dangerous airway/deep neck infections are less likely now but must be reconsidered if red flags (fever, trismus, muffled voice, drooling, stridor, toxicity, worsening swelling) appear.
+
+---
+
+### Diagnoses Considered
+
+**1. Viral Pharyngitis:** Most likely due to mild symptoms, normal vitals, and no airway compromise. Consider EBV; do rapid strep/throat culture.
+
+**2. Acute Bacterial Lymphadenitis:** Right neck swelling and sore throat may reflect cervical node infection. Examine nodes, consider rapid strep, empiric antibiotics.
+
+**3. Early Peritonsillar Cellulitis:** Unilateral pain with swelling, but lacks classic abscess findings; reassess for abscess if symptoms worsen.
+
+---
+
+### Warning Diagnoses Not To Miss
+
+| Diagnosis                   | Why It Matters / Key Features                                                   | Verification                                                                  |
+|-----------------------------|--------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
+| **Epiglottitis**            | Progressive odynophagia, drooling, muffled voice, stridor, toxic appearance. Absent here but must remain vigilant. | Upright position, avoid oral exam, urgent ENT/anesthesia, IV antibiotics.      |
+| **Retropharyngeal abscess** | Severe sore throat, neck pain/stiffness, muffled voice, trismus, fever, posterior pharyngeal wall bulge. Absent now, but possible early. | Contrast CT neck, CBC/CRP, ENT consult, IV antibiotics, urgent drainage if abscess. |
+| **Peritonsillar abscess**   | PTA can evolve from cellulitis; watch for unilateral pain, trismus, muffled voice, uvular deviation. | Intraoral US or CT, needle aspiration, drainage with antibiotics, airway assessment. |
+
+---
+
+## Management
+
+- **Monitor airway**: Reassess for red flags (stridor, trismus, drooling, muffled voice, swelling).
+- **Exam**: Focus on tonsils, neck nodes, and airway.
+- **Testing**: Rapid strep, consider throat culture or imaging if high suspicion for abscess.
+- **Treatment**:
+    - Viral likely: Symptomatic relief (NSAIDs, fluids), no antibiotics.
+    - Bacterial suspected: Oral antibiotics if able (amox-clavulanate or clinda), avoid amoxicillin if EBV possible.
+    - Abscess/airway risk: Urgent ENT/drainage, IV antibiotics, admit if airway/ill-appearing.
+- **Follow-up**: Outpatient unless airway risk; reassess in 1-2 days.
+- **Return if**: Worsening trismus, voice changes, stridor, inability to swallow, or rapid swelling.
+- **Advice**: Hydrate, avoid irritants, and if mono confirmed, no contact sports for 3-4 weeks.
+
+---
+
+`,
+            {
+                event_name: "agent_running",
+                agent_id: "warning_agent",
+                status: "running",
+            },
+            "final",
+        ),
+    ],
+},
+
+
+// full version
+{
+    case_id: "case_facial_swelling_aftercare",
+    status: ClinicalCaseStatus.COMPLETED,
+    title: "Facial Swelling Aftercare",
+
+    evidence_snippets: [
+    {
+        snippet_id: "1",
+        text:
+            "Vlachodimitropoulos A, Gatsounia A, Danielides G, Dafni C, Lygeros S. Bilateral Peritonsillar Abscess Secondary to Infectious Mononucleosis. Cureus. 2025 Sep 22;17(9):e92958. doi: 10.7759/cureus.92958. PMID: 41133070; PMCID: PMC12543371.",
+        source_id: "41133070",
+        source_type: "pubmed",
+        source_citation: "Vlachodimitropoulos A, Gatsounia A, Danielides G, Dafni C, Lygeros S. Bilateral Peritonsillar Abscess Secondary to Infectious Mononucleosis. Cureus. 2025 Sep 22;17(9):e92958. doi: 10.7759/cureus.92958. PMID: 41133070; PMCID: PMC12543371.",
+        created_at: "2024-01-15T08:30:00Z",
+    },
+    {
+        snippet_id: "2",
+        text: "A 19-year-old transgender adolescent on hormonal therapy with a history of recent hospitalization for exudative tonsillitis presented with worsening sore throat, dysphagia, fever, and a diffuse, generalized macular rash involving the back, face, abdomen, arms, and legs. Despite prior antibiotic treatment with amoxicillin, her symptoms recurred, prompting further evaluation. Laboratory findings revealed leukocytosis with lymphocytic and monocytic predominance, elevated inflammatory markers, and a positive Epstein-Barr virus (EBV) test, confirming infectious mononucleosis. Imaging demonstrated persistent tonsillitis without abscess formation, and additional testing identified concurrent herpes simplex virus (HSV)-1 oral ulcers. Given persistent fevers and systemic inflammation, hemophagocytic lymphohistiocytosis (HLH) was considered but not confirmed. Management included IV clindamycin for tonsillitis, corticosteroids for airway inflammation, and doxycycline for atypical pneumonia. Over the 10-day hospitalization, the patient showed gradual improvement, with resolution of the rash and all other symptoms. The rash was ultimately diagnosed as an amoxicillin-induced rash associated with EBV infection. This case highlights the importance of recognizing amoxicillin-induced rash in EBV infection and distinguishing it from allergic reactions and other common rashes, including but not limited to scarlet fever, viral exanthem, drug reactions, and HLH. Although various skin rashes are common in the transgender population, a literature review found no evidence linking amoxicillin-induced EBV rash to transgender patients. Accurate diagnosis aids in the appropriate selection of antimicrobial therapy and helps avoid unnecessary antibiotic restrictions due to misattributed allergic reactions.",
+        source_id: "40786360",
+        source_type: "pubmed",
+        source_citation: "Gujar AA, Pernudi K, Adeyinka A, Kondamudi N. Epstein-Barr Virus (EBV) Masquerading as Exudative Tonsillitis and Rash in a Transgender Adolescent. Cureus. 2025 Jul 11;17(7):e87737. doi: 10.7759/cureus.87737. PMID: 40786360; PMCID: PMC12335877.",
+        created_at: "2024-01-15",
+    },
+    {
+        snippet_id: "3",
+        text:
+            "Infectious mononucleosis (IM), caused by the Epstein-Barr virus (EBV), is primarily a self-limiting illness. However, it often mimics bacterial infections, such as bacterial tonsillitis, which can represent a diagnostic pitfall and, consequently, increase the risk of developing complications. The aim of this case report is to highlight the complications resulting from the incorrect differential diagnosis of EBV-induced IM and its clinical significance. We present the case of a 24-year-old male who was initially misdiagnosed with bacterial tonsillitis. Amoxicillin-clavulanic acid was initiated for treatment, after which he developed a widespread maculopapular rash. Acute EBV infection was diagnosed via serological tests. His condition improved following the discontinuation of antibiotic therapy and the administration of supportive symptomatic treatment. This case underscores the critical need for careful differential diagnosis between viral and bacterial tonsillitis. It demonstrates that an amoxicillin-clavulanic acid-induced rash can serve as an important clue for underlying EBV infection, thereby preventing unnecessary antibiotic use and enabling the correct direction of investigation and management.",
+        source_id: "40895910",
+        source_type: "pubmed",
+        source_citation: "Chaprava T, Ostatishvili K, Kirtadze N, Goginava A, Tabatadze I. Amoxicillin-Clavulanic Acid-Induced Rash in Epstein-Barr Virus Infection: A Case Report of a Diagnostic Pitfall in a 24-Year-Old Male. Cureus. 2025 Jul 29;17(7):e89023. doi: 10.7759/cureus.89023. PMID: 40895910; PMCID: PMC12398297.",
+        created_at: "2024-01-15",
+    },
+    {
+        snippet_id: "4",
+        text: `Background: Lymphadenopathy refers to any disease process involving lymph nodes that are abnormal in size and consistency. There are multiple etiologies in the setting of a diseased lymph node, including conditions of infection, autoimmune diseases, and neoplasia. Lymphadenitis is a term that refers to lymphadenopathies that are due to inflammatory processes and can represent an acute bacterial infection resulting from streptococcal pharyngitis or a prior viral upper respiratory infection. Cervical lymphadenopathy refers to nodal swelling in the neck region. While cervical lymphadenitis is a common clinical finding in the setting of a transient response to a benign local or generalized infection, it may evade detection sometimes and thus account for a percentage of misdiagnosis or delayed diagnosis in the tropics. This case report is aimed at increasing the awareness about the presentation of bacterial cervical lymphadenitis and how it can sometimes mimic the presentation that is typical and regularly found with plasmodiasis. It contributes to improved awareness and high index of suspicion in clinic when dealing with patients in the tropics.
+
+Case presentation: We present a case of delayed diagnosis of bacterial cervical lymphadenitis that initially presented with typical features of malaria from Plasmodium falciparum. A 26-year-old Nigerian woman presented to the outpatient department following complaints of a recurring fever of a month's duration and bilateral neck swelling of about 2 weeks prior to presentation.
+
+Conclusion: In the setting of a busy clinic, details are easily missed and salient features in the presentation of a patient that are needed for accurate diagnosis and management could go unrecognized. Hence, this case report highlights the importance of proper examination particularly of lymph nodes and use of different diagnostic modalities for the exact diagnosis of disease.
+
+Keywords: Cervical; Delayed diagnosis; Fine needle aspiration cytology (FNAC); Lymphadenitis; Lymphadenopathy; Neck swelling.`,
+        source_id: "36755272",
+        source_type: "pubmed",
+        source_citation: "Olaniyi O, Ayotunde O, Christabel T, Idowu O. Delayed diagnosis of bacterial cervical lymphadenitis in the tropics: a case report. J Med Case Rep. 2023 Feb 9;17(1):41. doi: 10.1186/s13256-023-03773-9. PMID: 36755272; PMCID: PMC9909935.",
+        created_at: "2024-01-15",
+    },
+    {
+        snippet_id: "5",
+        text:
+            "Necrotizing lymphadenitis (NL) is a rare entity that can occur as a complication of bacterial cervical lymphadenitis (CL) and is characterized by unilateral or bilateral cervical lymphadenopathy. NL most commonly presents in females and most reports have been in Japan. In this case, we present a 37-year-old male with no significant past medical history who presented with an unusual presentation and clinical course of NL. Initial workup for Epstein-Barr Virus (EBV) and other infectious etiology was negative. Yet, aspiration later revealed Group A Streptococcus. When the patient's pain and swelling did not subside with the initial antibiotic and supportive treatment, the patient underwent a repeat aspiration and biopsy that revealed a necrotic mass or lymph node. NL is uncommon and rarely due to infectious etiology. However, this marks a case in which a Group A Streptococcus was shown to be associated with subsequent necrotic lymph nodes and should allow practitioners to further consider an infectious etiology in the differential diagnosis of NL.",
+        source_id: "36793849",
+        source_type: "pubmed",
+        source_citation: "De Paz N, Pupo A, Frankel LR, Roorda SL, Hernandez R. Group A Streptococcus Necrotizing Lymphadenitis: A Case Report. Cureus. 2023 Jan 12;15(1):e33699. doi: 10.7759/cureus.33699. PMID: 36793849; PMCID: PMC9925034.",
+        created_at: "2024-01-15",
+    },
+    {
+        snippet_id: "6",
+        text: `Objective: To identify patient and hospital characteristics associated with the choice of treatment for pediatric patients who present in the acute setting with peritonsillar abscess/cellulitis (PTA/PTC).
+
+Study design: A retrospective cohort study was performed using Healthcare Cost and Utilization Project emergency department, ambulatory, and inpatient state databases for the years 2010 and 2011. Children aged 0 to 17 years were identified using International Classification of Diseases, Ninth Revision, Clinical Modification (ICD-9-CM) diagnosis code for PTA/PTC. The main outcome of interest was treatment received, which included medical therapy alone, incision and drainage (IND) or tonsillectomy. Multiple logistic regression analyses were conducted to model non-clinical factors associated with treatment received after adjusting for age, hospital state, race, primary expected payer, existing chronic condition(s), and type of hospital.
+
+Results: We identified 2994 patients who presented with PTA/PTC. The most common treatment choice was medical therapy alone (30.8%), followed by IND (30.5%) and tonsillectomy (9.4%). There were significant associations between treatment choice and race, primary payer status, and type of hospital (P < .05). We found that Hispanic patients, those with Medicaid as their primary expected payer, and those treated at a designated children's hospital were 3 nonclinical factors independently associated with an increase in likelihood of receiving tonsillectomy as treatment.
+
+Conclusion: There are important nonclinical factors associated with treatment of children who present in the acute setting with PTA/PTC. Additional research is recommended to understand these observed differences in care and how they may affect health outcomes.
+
+Keywords: peritonsillar abscess/peritonsillar cellulitis (PTA/PTC); tonsillectomy.`,
+        source_id: "25589309",
+        source_type: "pubmed",
+        source_citation: "Nguyen T, Haberland CA, Hernandez-Boussard T. Pediatric Patient and Hospital Characteristics Associated With Treatment of Peritonsillar Abscess and Peritonsillar Cellulitis. Clin Pediatr (Phila). 2015 Nov;54(13):1240-6. doi: 10.1177/0009922814565884. Epub 2015 Jan 14. PMID: 25589309.",
+        created_at: "2024-01-15",
+    },
+    {
+        snippet_id: "7",
+        text:
+            "Accidental ingestion and overdose of medications used in thyroidal illnesses may occur because of the frequency of these diagnoses. This review discusses acute overdosage of 4 groups of medicines. Acute ingestion of thyroid replacement medications occurs very frequently. Overdosage in children is usually asymptomatic and a benign condition; after evacuation of the stomach, propranolol may be used to treat symptomatic children. Other therapeutic regimens are rarely indicated in this age group. Ingestions of large amounts of antithyroid medications occur very rarely and limited information regarding treatment is available in the medical literature. Acute ingestion of iodine often results in corrosive injury of the gastrointestinal tract and renal damage. Cardiopulmonary collapse secondary to circulatory failure, oedema of the epiglottis and aspiration pneumonias may cause death. Administration of starch and sodium thiosulphate, maintenance of airway and stabilisation of circulation are the major components of therapy. Acute overdosage of beta-blockers is uncommon but can be lethal. Patients may appear well initially but they can suddenly develop convulsions and profound cardiovascular collapse requiring instant aggressive therapy. Potassium and glucose concentrations should be monitored. The usage of atropine, isoprenaline (isoproterenol), glucagon and prenalteral is discussed.",
+        source_id: "2460721",
+        source_type: "pubmed",
+        source_citation: "Lin TH, Kirkland RT, Kirkland JL. Clinical features and management of overdosage with thyroid drugs. Med Toxicol Adverse Drug Exp. 1988 Jul-Aug;3(4):264-72. doi: 10.1007/BF03259939. PMID: 2460721.",
+        created_at: "2024-01-15",
+    },
+    {
+        snippet_id: "8",
+        text: "Retropharyngeal Abscess: A Subtle Presentation of a Deep Space Neck Infection",
+        source_id: "",
+        source_type: "pubmed",
+        source_citation: "Argintaru N, Carr D. Retropharyngeal Abscess: A Subtle Presentation of a Deep Space Neck Infection. J Emerg Med. 2017 Oct;53(4):568-569. doi: 10.1016/j.jemermed.2017.06.004. PMID: 29079072.",
+        created_at: "2024-01-15",
+    },
+    ],
+    messages: [
+        createEmptyMessage(
+            "user_001",
+            MessageType.USER,
+            `Patient presents with **Facial Swelling**:
+
+- Swelling noted to the right side of the neck with complaints of right ear and right-sided sore throat pain.
+- States hard to swallow due to pain.
+- Handling secretions without issue.
+
+---
+
+### HPI / PE
+
+**XX-year-old male** presents with facial swelling, reports that the right side of his neck and right ear have been hurting for the last few days, and states he has been unable to sleep. Pain worsens with swallowing. Denies any sick contacts, fevers, or chills.
+
+---
+
+**Vital Signs**
+
+| BP      | Pulse | Resp | Temp            | SpO2 | Height  | Weight   | BMI        |
+|---------|-------|------|-----------------|------|---------|----------|------------|
+| 138/78  | 71    | 17   | 98.9 °F (37.2 °C) (Temporal) | 96%  | 5'7" (1.702 m) | 76.5 kg  | 26.41 kg/m² |
+
+---
+
+**Physical Exam**
+
+- **Constitutional:** Not in acute distress. Normal appearance.
+- **HENT:** Normocephalic. Moist mucous membranes. Posterior oropharyngeal erythema present.
+- **Eyes:** Extraocular movements intact. Pupils equal, round, reactive to light.
+- **Cardiovascular:** Normal rate and regular rhythm.
+- **Pulmonary:** Normal effort and breath sounds.
+- **Abdomen:** Flat. No distension.
+- **Musculoskeletal:** No swelling or tenderness. Normal range of motion.
+- **Skin:** Warm. Capillary refill < 2 seconds.
+- **Neurological:** No focal deficit. Alert.
+
+---
+
+**Procedures / Attestation**
+
+- Clinical impression as of DATE 0007: **Pharyngitis, unspecified etiology**
+- **ED Disposition:** Discharge
+`,
+        ),
+
+        createEmptyMessage(
+            "system",
+            MessageType.SYSTEM,
+            "Generating initial differential diagnosis list with preliminary reasoning analysis.",
+            {
+                event_name: "agent_running",
+                agent_id: "multi_specialist_agent",
+                agent_name: "Multi-Specialist Agent",
+                status: "running",
+            },
+            "thinking",
+        ),
+
+        createEmptyMessage(
+            "system",
+            MessageType.SYSTEM,
+            "Extracting symptoms that require special attention.",
+            {
+                event_name: "agent_running",
+                agent_id: "warning_agent",
+                agent_name: "Warning Agent",
+                status: "running",
+            },
+            "thinking",
+        ),
+
+        createEmptyMessage(
+            "system",
+            MessageType.SYSTEM,
+            "Matching symptoms with \"should not miss\" disease guidelines.",
+            {
+                event_name: "agent_running",
+                agent_id: "warning_agent",
+                agent_name: "Warning Agent",
+                status: "running",
+            },
+            "thinking",
+        ),
+
+        createEmptyMessage(
+            "system",
+            MessageType.SYSTEM,
+            "Ranking the \"should not miss\" diagnosis list.",
+            {
+                event_name: "agent_running",
+                agent_id: "warning_agent",
+                agent_name: "Warning Agent",
+                status: "running",
+            },
+            "thinking",
+        ),
+
+        createEmptyMessage(
+            "system",
+            MessageType.SYSTEM,
+            "Collecting the differential diagnosis list and \"should not miss\" diagnosis list.",
+            {
+                event_name: "agent_running",
+                agent_id: "context_review_agent",
+                agent_name: "Context Review Agent",
+                status: "running",
+            },
+            "thinking",
+        ),
+
+        createEmptyMessage(
+            "system",
+            MessageType.SYSTEM,
+            "Grouping similar diagnoses and reducing duplication.",
+            {
+                event_name: "agent_running",
+                agent_id: "context_review_agent",
+                agent_name: "Context Review Agent",
+                status: "running",
+            },
+            "thinking",
+        ),
+
+        createEmptyMessage(
+            "system",
+            MessageType.SYSTEM,
+            "Searching PubMed results for each diagnosis in the list.",
+            {
+                event_name: "agent_running",
+                agent_id: "diagnosis_reasoning_agent",
+                agent_name: "Diagnosis Reasoning Agent",
+                status: "running",
+            },
+            "thinking",
+        ),
+
+        createEmptyMessage(
+            "system",
+            MessageType.SYSTEM,
+            "Matching diagnostic evidence with the patient case, providing confidence levels, and generating supporting evidence.",
+            {
+                event_name: "agent_running",
+                agent_id: "diagnosis_reasoning_agent",
+                agent_name: "Diagnosis Reasoning Agent",
+                status: "running",
+            },
+            "thinking",
+        ),
+
+        createEmptyMessage(
+            "system",
+            MessageType.SYSTEM,
+            "Aggregating all diagnostic reasoning results, re-ranking the diagnosis list, and generating a final reasoning summary.",
+            {
+                event_name: "agent_running",
+                agent_id: "overall_reasoning_agent",
+                agent_name: "Overall Reasoning Agent",
+                status: "running",
+            },
+            "thinking",
+        ),
+
+        createEmptyMessage(
+            "system",
+            MessageType.SYSTEM,
+            "Providing additional actions required for each diagnosis.",
+            {
+                event_name: "agent_running",
+                agent_id: "diagnostic_action_agent",
+                agent_name: "Diagnostic Action Agent",
+                status: "running",
+            },
+            "thinking",
+        ),
+
+        createEmptyMessage(
+            "system",
+            MessageType.SYSTEM,
+            "Compiling all actions and the final reasoning report, then generating the comprehensive management plan for the patient.",
+            {
+                event_name: "agent_running",
+                agent_id: "management_agent",
+                agent_name: "Management Agent",
+                status: "running",
+            },
+            "thinking",
+        ),
+
+        createEmptyMessage(
+            "agent",
+            MessageType.AGENT,
+            `## Top-3 Diagnosis
+
+1. Viral Infections of the Throat
+2. Acute unilateral cervical lymphadenitis (likely bacterial
+3. Right peritonsillar cellulitis (early peritonsillar abscess)
+
+## Top-3 "Should Not Miss" Diagnosis
+
+1. Epiglottitis
+2. Retropharyngeal abscess
+3. Peritonsillar abscess
+
+---
+
+## Clinical Reasoning
+
+**Summary:**  
+Right-sided sore throat with ipsilateral ear/neck swelling, normal vitals, and intact secretion handling most likely reflects pharyngitis with reactive/bacterial cervical lymphadenitis. Early peritonsillar infection remains possible. Dangerous airway/deep neck infections are less likely now but must be reconsidered if red flags (fever, trismus, muffled voice, drooling, stridor, toxicity, worsening swelling) appear.
+
+---
+
+### Diagnoses Considered
+
+**1. Viral Infections of the Throat**
+
+- **Why it fits:** Posterior oropharyngeal erythema, afebrile, normal vitals, no trismus/airway compromise, and ability to handle secretions compatible with uncomplicated viral pharyngitis (including EBV), which can mimic bacterial tonsillitis and may be unilateral. Recognizing EBV matters to avoid aminopenicillin rash.
+- **Gaps/concerns:** Unilateral neck swelling and ipsilateral otalgia also suggest bacterial tonsillitis/adenitis or peritonsillar/deep neck pathology. No rapid strep/culture, mono testing, or documentation of exudates, tonsillar asymmetry, uvular deviation, or viral URI signs.
+- **Verification:** Perform rapid strep and/or throat culture; consider heterophile antibody or EBV serologies if clinically suspected; treat supportively; return precautions.
+
+**2. Acute unilateral cervical lymphadenitis (likely bacterial)**
+
+- **Why it fits:** Several days of unilateral right neck swelling with ipsilateral ear pain and odynophagia, plus pharyngeal erythema, typical for acute cervical lymphadenitis from oropharyngeal infection (commonly GAS or Staph aureus). Intact secretion handling and normal vitals favor uncomplicated adenitis.
+- **Limitations:** No documented node exam (size, warmth, tenderness, fluctuance), no fever, no labs/microbiology, no otoscopic/dental/salivary source identified. ED impression nonspecific pharyngitis.
+- **Verification:** Cervical node exam, otoscopic, oral/dental, and salivary gland evaluation, rapid strep/culture, CBC/CRP. Consider empiric antibiotics; use neck US to assess nodes. Escalate to CT if complications.
+
+**3. Right peritonsillar cellulitis (early peritonsillar abscess)**
+
+- **Why it fits:** Unilateral odynophagia with ipsilateral otalgia and neck/facial swelling suggests peritonsillar infection. Afebrile, no drooling, preserved secretion control favors cellulitis/early infection over mature abscess.
+- **Missing data:** No hallmark PTA signs (tonsillar bulge, uvular deviation, trismus, muffled voice), nor imaging or aspiration performed. Other causes (pharyngitis, adenitis, etc.) possible.
+- **Verification:** Reassess for peritonsillar asymmetry, uvular deviation, trismus; bedside US to identify collection and guide aspiration; CT if uncertain. Negative aspiration supports cellulitis (antibiotics).
+
+
+---
+
+### Warning Diagnoses Not To Miss
+
+| Diagnosis                   | Why It Matters / Key Features                                                   | Verification                                                                  |
+|-----------------------------|--------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
+| **Epiglottitis**            | Progressive odynophagia, drooling, muffled voice, stridor, toxic appearance. Absent here but must remain vigilant. | Upright position, avoid oral exam, urgent ENT/anesthesia, IV antibiotics.      |
+| **Retropharyngeal abscess** | Severe sore throat, neck pain/stiffness, muffled voice, trismus, fever, posterior pharyngeal wall bulge. Absent now, but possible early. | Contrast CT neck, CBC/CRP, ENT consult, IV antibiotics, urgent drainage if abscess. |
+| **Peritonsillar abscess**   | PTA can evolve from cellulitis; watch for unilateral pain, trismus, muffled voice, uvular deviation. | Intraoral US or CT, needle aspiration, drainage with antibiotics, airway assessment. |
+
+---
+
+
+## Management
+
+**Summary:**  
+Likely acute pharyngitis with reactive/bacterial cervical lymphadenitis; early right peritonsillar infection is possible, but no current airway compromise.
+
+---
+
+### 1. Immediate Priorities and Safety
+
+- Reassess airway now and at discharge (swallowing, drooling, stridor, trismus, muffled voice, rapidly progressing swelling).
+- Any red flags: keep upright, urgent ENT/anesthesia, prepare airway.
+
+---
+
+### 2. Focused Exam Today
+
+- **ENT:** Document tonsil size/exudate, peritonsillar fullness, uvular deviation, trismus, voice quality.
+- **Neck:** Map right cervical nodes (size, tenderness, fluctuance, warmth, mobility, location), overlying erythema.
+- **Otoscopy:** Rule out AOM.
+- **Oral/dental exam:** Assess for odontogenic source.
+- **Salivary glands:** Parotid/submandibular swelling, duct findings.
+- **Score:** Calculate Centor/McIsaac score.
+
+---
+
+### 3. Diagnostics
+
+- Group A Strep: RADT today; if negative but Centor ≥3 or high suspicion—throat culture/NAAT.
+- Point-of-care US: Assess for peritonsillar collection and nodal suppuration.
+- Labs (bacterial features/ill-appearing): CBC, CRP (±ESR), EBV tests if indicated, COVID/flu NAATs as needed.
+- Fluctuant node/collection: US-guided aspiration for Gram stain/culture.
+
+---
+
+### 4. Treatment Pathways
+
+- **Viral pharyngitis likely:**  
+    - NSAIDs/acetaminophen, adjuncts (gargle, lozenge, fluids, rest), optional dexamethasone for severe pain.
+    - NO antibiotics.
+
+- **Bacterial lymphadenitis/peritonsillar cellulitis suspected, PO tolerated:**  
+    - Empiric antibiotics (amox-clavulanate 875/125 mg PO BID x7-10d; clinda if pen-allergic), analgesia, ±dexamethasone.
+    - Avoid aminopenicillins if mono strongly suspected.
+
+- **Peritonsillar abscess confirmed or unable to take PO/airway risk:**  
+    - Urgent drainage, IV abx (amp-sulbactam; clinda if allergic), IV/IM dexamethasone.
+    - Monitor until PO tolerated, switch to oral.
+    - Admit if airway/sepsis/dehydration/deep neck.
+
+---
+
+### 5. Disposition & Follow-up
+
+- Outpatient care appropriate.
+- Recheck in 24-48 hrs (earlier if worsening) for results/clinical course. Escalate to imaging/ENT if no improvement or suspicion for abscess.
+- Persistent/recurrent nodes >2-4 weeks, hard/fixed: further ENT workup and imaging (US/CT, FNA).
+
+---
+
+### 6. Return Precautions (ED Immediately If…)
+
+- New/worsening trismus, muffled voice, drooling, stridor, dyspnea, rapidly increasing swelling, severe pain, dehydration, inability to swallow fluids, fever ≥101°F (38.3°C), or spreading erythema.
+
+---
+
+### 7. Patient Guidance
+
+- Maintain hydration, avoid smoking/irritants, no utensil sharing. If EBV confirmed, avoid contact sports 3–4 weeks.
+
+---
+
+**Documentation checklist:**  
+Record:  
+- Exam details (tonsillar asymmetry, uvula, trismus, node map)
+- Centor score
+- Airway assessment
+- Tests ordered/results
+- Antibiotic choice/rationale
+- Explicit return precautions
+
+---
+
+`,
+            {
+                event_name: "agent_running",
+                agent_id: "warning_agent",
+                status: "running",
+            },
+            "final",
+        ),
+    ],
+},
+
+
+
+{
     case_id: "case_heart_failure_2024_001",
     status: ClinicalCaseStatus.COMPLETED,
-    title:
-        "Complex Heart Failure with Reduced Ejection Fraction in Elderly Patient with Multiple Comorbidities",
+    title: "Complex Heart Failure with Reduced Ejection Fraction in Elderly Patient with Multiple Comorbidities",
 
     evidence_snippets: [
         {
             snippet_id: "evid_001",
             text:
-                "Patient: 78-year-old male with history of ischemic cardiomyopathy, EF 25%, diabetes mellitus type 2, chronic kidney disease stage 3a, and atrial fibrillation. Presents with 3-day history of progressive dyspnea, orthopnea, and bilateral lower extremity edema. Physical exam reveals: BP 145/90, HR 110 irregular, JVD elevated, bilateral rales, S3 gallop, 2+ pitting edema bilaterally. Labs: BNP 850 pg/mL, creatinine 1.8 mg/dL, eGFR 35 mL/min/1.73m², sodium 138 mEq/L, potassium 4.2 mEq/L.",
+                "Create aftercare instructions for a patient discharged after a minor skin surgery. Explain how to care for the wound site, signs of infection to watch for, when they can shower, and when to come back for suture removal.",
             source_id: "clinical_note_001",
             source_type: "clinical_note",
             source_citation: "Emergency Department Clinical Note - Dr. X, MD",
@@ -461,14 +1213,14 @@ export const clinical_case = {
         createEmptyMessage(
             "user_001",
             MessageType.USER,
-            "I have a 78-year-old male patient with heart failure, diabetes, and kidney disease who presented with acute decompensation. His EF is 25% and he's currently on lisinopril, metoprolol, and furosemide. \n\nBP 145/90, HR 110 irregular, JVD elevated, bilateral rales, S3 gallop, 2+ pitting edema bilaterally. Labs: BNP 850 pg/mL, creatinine 1.8 mg/dL, eGFR 35 mL/min/1.73m², sodium 138 mEq/L, potassium 4.2 mEq/L.\n\nLeft VEF 25%, severe global hypokinesis, MMR, estimated pasp 45 mmHg, LA 45 mL/m².\n\nWhat's the best approach for optimizing his heart failure therapy?",
+            "Create aftercare instructions for a patient discharged after a minor skin surgery. Explain how to care for the wound site, signs of infection to watch for, when they can shower, and when to come back for suture removal.",
         ),
 
         // system + tools (unchanged)
         createEmptyMessage(
-            "system_001",
+            "system",
             MessageType.SYSTEM,
-            "",
+            "Analyzing the case...",
             {
                 event_name: "agent_thinking",
                 agent_id: "cardiology_agent",
@@ -477,355 +1229,124 @@ export const clinical_case = {
             "thinking",
         ),
 
-        // AGENT (add citations)
         createEmptyMessage(
-            "cardiology_agent",
-            MessageType.AGENT,
-            "I'll analyze this complex heart failure case. Based on the patient's profile—elderly male with HFrEF (EF 25%), diabetes, CKD stage 3a, and atrial fibrillation—I will align recommendations with contemporary guidelines and trials. <cite>evid_001</cite> <cite>evid_002</cite> <cite>evid_004</cite>",
-            {
-                agent_name: "Cardiology Agent",
-            },
-            "planning",
-        ),
-
-        createEmptyMessage(
-            "system_002",
+            "system",
             MessageType.SYSTEM,
-            "",
+            "Searching published medical literature, guidelines, and more",
             {
                 event_name: "tool_calling",
                 tool_name: "guideline_search",
                 parameters: {
-                    condition: "heart_failure_reduced_ef",
+                    query: "heart failure reduced ejection fraction",
                     year: "2023",
                 },
             },
-            "planning",
-        ),
-
-        createEmptyMessage(
-            "guideline_tool",
-            MessageType.TOOL,
-            "Retrieved 2023 AHA/ACC/HFSA Heart Failure Guidelines. Key recommendations for HFrEF include quadruple therapy: ACE inhibitor/ARB, beta-blocker, MRA, and SGLT2 inhibitor. For patients with diabetes and HFrEF, SGLT2 inhibitors are now first-line. ARNI (sacubitril-valsartan) is preferred over ACE inhibitor when tolerated.",
-            { 
-                tool_name: "Guideline Search",
-                tool_parameters: {
-                    condition: "heart_failure_reduced_ef",
-                    year: "2023",
-                },
-                tool_response: { guidelines_found: 5, key_recommendations: 12 } 
-            },
             "tooling",
         ),
 
+        // AGENT (add citations)
         createEmptyMessage(
-            "system_003",
+            "system",
             MessageType.SYSTEM,
-            "",
+            "Synthesizing relevant information",
             {
-                event_name: "tool_calling",
-                tool_name: "evidence_search",
-                parameters: {
-                    drug: "dapagliflozin",
-                    condition: "heart_failure",
-                },
-            },
-            "tooling",
-        ),
-
-        createEmptyMessage(
-            "evidence_tool",
-            MessageType.TOOL,
-            "Found DAPA-HF trial results: Dapagliflozin reduced CV death or HF hospitalization by 26% (HR 0.74, 95% CI 0.65-0.85) in HFrEF patients regardless of diabetes status. NNT was 21 patients over 2.3 years. Safety profile was favorable.",
-            {
-                tool_name: "Trial Search",
-                tool_parameters: {
-                    drug: "dapagliflozin",
-                    condition: "heart_failure",
-                },
-                tool_response: {
-                    trials_found: 3,
-                    primary_outcome: "CV death or HF hospitalization",
-                    hazard_ratio: 0.74,
-                },
-            },
-            "tooling",
-        ),
-
-        // AGENT (add citations)
-        createEmptyMessage(
-            "cardiology_agent",
-            MessageType.AGENT,
-            "The evidence supports adding a SGLT2 inhibitor (e.g., dapagliflozin) now; renal function is adequate (eGFR 35) for initiation with standard dosing. I will review renal dosing and contraindications next. <cite>evid_005</cite> <cite>evid_007</cite> <cite>evid_009</cite>",
-            {
-                agent_name: "Cardiology Agent",
+                event_name: "agent_synthesizing",
+                agent_id: "cardiology_agent",
+                status: "synthesizing_case",
             },
             "planning",
         ),
 
-        createEmptyMessage(
-            "system_004",
-            MessageType.SYSTEM,
-            "",
-            {
-                event_name: "tool_calling",
-                tool_name: "drug_interaction_checker",
-                parameters: {
-                    medications: [
-                        "lisinopril",
-                        "metoprolol",
-                        "furosemide",
-                        "dapagliflozin",
-                    ],
-                    patient_conditions: [
-                        "CKD_stage_3a",
-                        "diabetes",
-                        "atrial_fibrillation",
-                    ],
-                },
-            },
-            "planning",
-        ),
-
-        createEmptyMessage(
-            "pharmacy_tool",
-            MessageType.TOOL,
-            "Drug interaction analysis complete. Dapagliflozin is safe in CKD stage 3a (eGFR ≥30). No significant interactions with current medications. Consider monitoring for volume depletion with furosemide. ARNI (sacubitril-valsartan) would require stopping lisinopril first due to ACE inhibitor overlap.",
-            {
-                tool_name: "Drug Interaction Checker",
-                tool_parameters: {
-                    medications: [
-                        "lisinopril",
-                        "metoprolol",
-                        "furosemide",
-                        "dapagliflozin",
-                    ],
-                    patient_conditions: [
-                        "CKD_stage_3a",
-                        "diabetes",
-                        "atrial_fibrillation",
-                    ],
-                },
-                tool_response: {
-                    interactions_found: 0,
-                    warnings: 1,
-                    recommendations: 3,
-                },
-            },
-            "tooling",
-        ),
-
-        // AGENT (add citations)
-        createEmptyMessage(
-            "nephrology_agent",
-            MessageType.AGENT,
-            "Agree with SGLT2 initiation; data suggest renal and cardiovascular benefit in HFrEF. For ARNI, efficacy persists in CKD stage 3, but we should watch blood pressure and potassium closely. <cite>evid_005</cite> <cite>evid_006</cite> <cite>evid_007</cite>",
-            {
-                agent_name: "Nephrology Agent",
-            },
-            "planning",
-        ),
-
-        createEmptyMessage(
-            "system_005",
-            MessageType.SYSTEM,
-            "",
-            {
-                event_name: "tool_calling",
-                tool_name: "trial_subgroup_analysis",
-                parameters: {
-                    trial: "PARADIGM-HF",
-                    subgroup: "CKD_stage_3",
-                    outcome: "safety_efficacy",
-                },
-            },
-            "planning",
-        ),
-
-        createEmptyMessage(
-            "trial_analysis_tool",
-            MessageType.TOOL,
-            "PARADIGM-HF subgroup analysis for CKD stage 3 patients (eGFR 30-60): ARNI showed consistent benefit with 18% reduction in CV death or HF hospitalization (HR 0.82, 95% CI 0.70-0.96). Safety profile acceptable with higher rates of hypotension (8.2% vs 5.8%) but lower hyperkalemia (11.2% vs 13.6%). No increase in renal adverse events.",
-            {
-                tool_name: "Trial Subgroup Analysis",
-                tool_parameters: {
-                    trial: "PARADIGM-HF",
-                    subgroup: "CKD_stage_3",
-                    outcome: "safety_efficacy",
-                },
-                tool_response: {
-                    subgroup_size: 1856,
-                    primary_outcome_hr: 0.82,
-                    safety_events: "acceptable",
-                },
-            },
-            "tooling",
-        ),
-
-        // AGENT (add citations)
-        createEmptyMessage(
-            "cardiology_agent",
-            MessageType.AGENT,
-            "Stepwise plan: (1) Add dapagliflozin 10 mg daily; (2) Transition from lisinopril to ARNI after washout; (3) Up-titrate beta-blocker to target as tolerated; (4) Consider MRA once potassium is stable. This aligns with guideline-directed quadruple therapy. <cite>evid_004</cite> <cite>evid_005</cite> <cite>evid_006</cite> <cite>evid_003</cite>",
-            {
-                agent_name: "Cardiology Agent",
-            },
-            "planning",
-        ),
-
-        // AGENT (add citations)
-        createEmptyMessage(
-            "endocrinology_agent",
-            MessageType.AGENT,
-            "From a diabetes standpoint, dapagliflozin is appropriate and confers CV/renal benefit. Keep metformin given current eGFR, and monitor for rare euglycemic DKA; check ketones with concerning symptoms. <cite>evid_009</cite> <cite>evid_005</cite> <cite>evid_007</cite>",
-            {
-                agent_name: "Endocrinology Agent",
-            },
-            "planning",
-        ),
-
-        createEmptyMessage(
-            "system_006",
-            MessageType.SYSTEM,
-            "",
-            {
-                event_name: "tool_calling",
-                tool_name: "dosing_calculator",
-                parameters: {
-                    drug: "dapagliflozin",
-                    eGFR: 35,
-                    weight: 85,
-                    age: 78,
-                },
-            },
-            "planning",
-        ),
-
-        createEmptyMessage(
-            "dosing_tool",
-            MessageType.TOOL,
-            "Dapagliflozin dosing calculation: Standard dose 10mg daily is appropriate for eGFR ≥30. No dose adjustment needed for this patient's renal function. Monitor for volume depletion, especially with concurrent furosemide. Consider reducing furosemide if patient becomes volume depleted.",
-            {
-                tool_name: "Dosing Calculator",
-                tool_parameters: {
-                    drug: "dapagliflozin",
-                    eGFR: 35,
-                    weight: 85,
-                    age: 78,
-                },
-                tool_response: {
-                    recommended_dose: "10mg daily",
-                    adjustments_needed: "none",
-                    monitoring_required: ["volume_status", "electrolytes"],
-                },
-            },
-            "tooling",
-        ),
-
-        // AGENT (add citations)
-        createEmptyMessage(
-            "pharmacy_agent",
-            MessageType.AGENT,
-            "Medication optimization: current regimen lacks SGLT2 inhibitor and MRA. For ARNI transition, stop lisinopril for 36 hours before initiating sacubitril-valsartan (e.g., 24/26 mg BID, titrate as tolerated). Monitor BP and potassium during up-titration. <cite>evid_004</cite> <cite>evid_006</cite> <cite>evid_003</cite>",
-            {
-                agent_name: "Pharmacy Agent",
-            },
-            "planning",
-        ),
-
-        createEmptyMessage(
-            "system_007",
-            MessageType.SYSTEM,
-            "",
-            {
-                event_name: "tool_calling",
-                tool_name: "contraindication_checker",
-                parameters: {
-                    drug: "spironolactone",
-                    conditions: ["CKD_stage_3a", "hyperkalemia_risk"],
-                    current_meds: ["lisinopril", "dapagliflozin"],
-                },
-            },
-            "planning",
-        ),
-
-        // AGENT (add citations)
-        createEmptyMessage(
-            "contraindication_tool",
-            MessageType.TOOL,
-            "MRA check: not contraindicated at eGFR 35; consider eplerenone or defer MRA until after ARNI optimization and potassium monitoring given hyperkalemia risk.",
-            {
-                tool_name: "Contraindication Checker",
-                tool_parameters: {
-                    drug: "spironolactone",
-                    conditions: ["CKD_stage_3a", "hyperkalemia_risk"],
-                    current_meds: ["lisinopril", "dapagliflozin"],
-                },
-                tool_response: {
-                    contraindicated: false,
-                    risk_level: "moderate",
-                    alternatives: ["eplerenone", "defer_until_stable"],
-                },
-            },
-            "tooling",
-        ),
-
-        // AGENT (add citations)
-        createEmptyMessage(
-            "cardiology_agent",
-            MessageType.AGENT,
-            "Final recommendation before summary: add dapagliflozin 10 mg daily; switch from lisinopril to sacubitril-valsartan after 36-hour washout; optimize metoprolol toward target dose; defer MRA until potassium consistently <5.0 mEq/L; close follow-up in ~2 weeks. <cite>evid_004</cite> <cite>evid_005</cite> <cite>evid_006</cite> <cite>evid_009</cite> <cite>evid_002</cite> <cite>evid_007</cite>",
-            {
-                agent_name: "Cardiology Agent",
-            },
-            "planning",
-        ),
-
-        createEmptyMessage(
-            "system_008",
-            MessageType.SYSTEM,
-            "",
-            {
-                event_name: "system_notification",
-                status: "analysis_complete",
-                summary:
-                    "Multi-agent analysis completed with consensus on quadruple therapy approach",
-            },
-            "summarizing",
-        ),
+        // createEmptyMessage(
+        //     "system_002",
+        //     MessageType.SYSTEM,
+        //     "",
+        //     {
+        //         event_name: "tool_calling",
+        //         tool_name: "guideline_search",
+        //         parameters: {
+        //             condition: "heart_failure_reduced_ef",
+        //             year: "2023",
+        //         },
+        //     },
+        //     "tooling",
+        // ),
 
         // NEW: FINAL answer to the user's first question (explicit, stage: "final")
         createEmptyMessage(
-            "msg_final_001",
+            "agent",
             MessageType.AGENT,
-            "Comprehensive plan to optimize heart failure therapy (HFrEF, EF 25%, diabetes, CKD3a, AF):\n\n" +
-              "## Assessment & goals:\n" +
-              "- The presentation (dyspnea/orthopnea/edema, JVD, rales, S3) with EF 25% and CKD3a is consistent with acute decompensated HFrEF on sub-optimal GDMT. <cite>evid_001</cite> <cite>evid_002</cite> <cite>evid_007</cite>\n" +
-              "- Therapeutic goals: relieve congestion, initiate/optimize disease-modifying therapy (quadruple therapy), minimize renal/electrolyte complications, and reduce readmission/CV death risk. <cite>evid_004</cite>\n\n" +
-              "## Stepwise disease-modifying therapy:\n" +
-              "1) Start SGLT2 inhibitor now — dapagliflozin 10 mg once daily. Kidney function is adequate (eGFR 35), and benefits extend regardless of diabetes status; monitor for volume depletion given concurrent loop diuretic. <cite>evid_005</cite> <cite>evid_009</cite> <cite>evid_007</cite>\n" +
-              "2) Transition ACEi → ARNI — stop lisinopril and observe a 36-hour washout, then start sacubitril/valsartan 24/26 mg BID, uptitrating as tolerated (target per BP/renal status). ARNI is preferred over ACEi in HFrEF and demonstrated superior outcomes. <cite>evid_004</cite> <cite>evid_006</cite>\n" +
-              "3) Beta-blocker optimization — continue metoprolol succinate and uptitrate toward target as tolerated with HR/BP guidance (e.g., q2–4 weeks). This provides mortality and hospitalization benefit in HFrEF. <cite>evid_004</cite>\n" +
-              "4) Consider MRA — once potassium is <5.0 mEq/L and renal function remains stable, add an MRA (consider eplerenone if hyperkalemia risk is a concern). With CKD3a (eGFR 35), MRA is not absolutely contraindicated but requires close K/Cr monitoring. <cite>evid_004</cite> <cite>evid_007</cite>\n\n" +
-              "## Congestion management & safety net:\n" +
-              "- Continue loop diuretic with daily weights and adjust to euvolemia; watch for SGLT2-related volume shifts. Check BMP within 3–7 days after changes. <cite>evid_007</cite> <cite>evid_005</cite>\n" +
-              "- During ACEi→ARNI transition, monitor BP, renal function, and potassium closely; counsel on hypotension symptoms. <cite>evid_006</cite> <cite>evid_004</cite>\n\n" +
-              "## Diabetes and CKD co-management:\n" +
-              "- Maintain metformin at current dose if clinically appropriate; reassess if eGFR declines toward <30. SGLT2 therapy provides CV/renal protection in diabetes with HF. <cite>evid_009</cite> <cite>evid_005</cite>\n" +
-              "- For CKD3a, reinforce sick-day rules (hold SGLT2 if poor intake/prolonged fasting/acute illness); monitor electrolytes and renal function during uptitrations. <cite>evid_009</cite> <cite>evid_007</cite>\n\n" +
-              "## AF and background therapy:\n" +
-              "- Continue anticoagulation (apixaban on board) and statin for ischemic disease as per current regimen; review doses with renal function trends. <cite>evid_003</cite> <cite>evid_007</cite>\n\n" +
-              "## Follow-up & monitoring plan:\n" +
-              "- Labs: BMP (K/Cr/eGFR/Na) in 3–7 days after SGLT2 start and after ARNI initiation/titrations; repeat with any dose change or symptom shift. <cite>evid_007</cite>\n" +
-              "- Clinic review in ~2 weeks to up-titrate ARNI and beta-blocker if stable; reassess volume status, BP, HR, symptoms, and weight trajectory. <cite>evid_004</cite>\n" +
-              "- Education: daily weights, salt/fluid guidance, hypotension and dehydration red-flags, rare euglycemic DKA symptoms (seek care if nausea/vomiting/abdominal pain). <cite>evid_009</cite> <cite>evid_005</cite>\n\n" +
-              "## Why this plan:\n" +
-              "- It implements guideline-directed quadruple therapy for HFrEF with evidence of reduced CV death and HF hospitalization (DAPA-HF, PARADIGM-HF) and guideline preference for ARNI over ACEi when feasible, tailored to this patient's EF 25% and CKD3a. <cite>evid_004</cite> <cite>evid_005</cite> <cite>evid_006</cite> <cite>evid_002</cite> <cite>evid_007</cite>",
+            `### Minor Skin Surgery Aftercare
+
+**Wound Site Care:**  
+  
+- Keep the wound clean and covered with a non-adherent, moist dressing for the first 24-48 hours to promote optimal healing and reduce infection risk. Application of a thin layer of petroleum jelly or a similar ointment is recommended to maintain a moist environment.[1][2][3][4]  
+  
+- Change the dressing daily or if it becomes wet or soiled. Cleanse the wound gently with tap water or saline; antiseptic solutions are not required for routine care.[5][1][2][4]  
+  
+- Avoid trauma or excessive movement at the wound site.  
+  
+**Signs of Infection to Monitor:**  
+  
+- Watch for increasing redness, swelling, warmth, pain, purulent discharge, or fever. The Infectious Diseases Society of America defines surgical site infection as the presence of purulent drainage, positive wound cultures, or local signs such as pain, swelling, and erythema.[6]  
+  
+- If any of these signs develop, seek prompt medical evaluation.  
+  
+**Showering Recommendations:**  
+  
+- Showering is permitted as early as 6-12 hours after surgery, as multiple randomized trials and meta-analyses show no increased risk of infection or complications with early water exposure.[7][8][9]  
+  
+- When showering, allow water to run gently over the wound. Avoid soaking (e.g., baths, swimming) until sutures are removed and the wound is fully healed.[5][10][8]  
+  
+- After showering, gently pat the area dry and reapply a clean dressing.  
+  
+**Suture Removal:**  
+  
+- Return for suture removal as advised, typically:  
+  
+- Face: **5-7 days**  
+  
+- Scalp: **7-10 days**  
+  
+- Trunk and upper extremities: **7-14 days**  
+  
+- Lower extremities: **10-14 days**  
+  
+These intervals are based on expert consensus and clinical experience.[4]  
+  
+- Adhere to the specific timeline provided at discharge, as wound location and patient factors may influence timing.  
+  
+**Additional Instructions:**  
+  
+- Minimize strenuous activity or stretching of the wound area until sutures are removed.  
+  
+- Protect the wound from sun exposure to optimize cosmetic outcomes.[11][3]  
+  
+- Ensure tetanus immunization is up to date if indicated.[1][4]  
+  
+### References
+
+1. Current Management of Acute Cutaneous Wounds. Singer AJ, Dagum AB. The New England Journal of Medicine. 2008;359(10):1037-46. doi:10.1056/NEJMra0707253.
+2. Management of Minor Acute Cutaneous Wounds: Importance of Wound Healing in a Moist Environment. Korting HC, Schöllmann C, White RJ. Journal of the European Academy of Dermatology and Venereology : JEADV. 2011;25(2):130-7. doi:10.1111/j.1468-3083.2010.03775.x.
+3. Wound Care Practices Following in-Office Cutaneous Surgery Among Family Physicians in Canada. Sander M, Rebner B, Wiens R, et al. Journal of Wound Care. 2024;33(Sup5):S14-S21. doi:10.12968/jowc.2024.33.Sup5.S14.
+4. Laceration Repair: A Practical Approach. Forsch RT, Little SH, Williams C. American Family Physician. 2017;95(10):628-636.
+5. Common Questions About Wound Care. Worster B, Zawora MQ, Hsieh C. American Family Physician. 2015;91(2):86-92.
+6. Practice Guidelines for the Diagnosis and Management of Skin and Soft Tissue Infections: 2014 Update by the Infectious Diseases Society of America. Stevens DL, Bisno AL, Chambers HF, et al. Clinical Infectious Diseases : An Official Publication of the Infectious Diseases Society of America. 2014;59(2):147-59. doi:10.1093/cid/ciu296.
+7. Early Postoperative Water Exposure Does Not Increase Complications in Cutaneous Surgeries: A Randomized, Investigator-Blinded, Controlled Trial. Samaan C, Kim Y, Zhou S, Kirby JS, Cartee TV. Journal of the American Academy of Dermatology. 2024;91(5):896-903. doi:10.1016/j.jaad.2024.05.098.
+8. Can Sutures Get Wet? Prospective Randomised Controlled Trial of Wound Management in General Practice. Heal C, Buettner P, Raasch B, et al. BMJ (Clinical Research Ed.). 2006;332(7549):1053-6. doi:10.1136/bmj.38800.628704.AE.
+9. Does the Timing of Postoperative Showering Impact Infection Rates? A Systematic Review and Meta-Analysis. Copeland-Halperin LR, Reategui Via Y Rada ML, Levy J, et al. Journal of Plastic, Reconstructive & Aesthetic Surgery : JPRAS. 2020;73(7):1306-1311. doi:10.1016/j.bjps.2020.02.007.
+10. Postoperative Showering for Clean and Clean-Contaminated Wounds: A Prospective, Randomized Controlled Trial. Hsieh PY, Chen KY, Chen HY, et al. Annals of Surgery. 2016;263(5):931-6. doi:10.1097/SLA.0000000000001359.
+11. Dermatological Postoperative Patient Information Leaflets: Is It Time for More Uniformity?. Hunt WT, McGrath EJ. Clinical and Experimental Dermatology. 2015;40(7):747-52. doi:10.1111/ced.12701.`,
             { agent_name: "Review Agent" },
             "final"
-          ),
+        ),
     ] as Message[],
 
     created_at: "2024-01-15T08:00:00Z",
     updated_at: "2024-01-15T15:30:00Z",
-} as ClinicalCase;
+},
+
+
+
+
+] as ClinicalCase[];

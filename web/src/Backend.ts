@@ -11,10 +11,30 @@
  * const case_data = await backend.getCase(case_id);
  */
 
-import type { ClinicalCase } from './models/ClinicalCase';
+import { MessageStage, type ClinicalCase, type Message } from './models/ClinicalCase';
+import { useUserStore } from './stores/UserStore';
+import { clinical_cases } from './models/Samples';
 
 // API Configuration
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:9627';
+
+/**
+ * Get authentication headers with JWT token
+ */
+function getAuthHeaders(): HeadersInit {
+    const userStore = useUserStore();
+    const token = userStore.accessToken;
+
+    const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+    };
+
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    return headers;
+}
 
 /**
  * API Response types
@@ -69,22 +89,23 @@ export const backend = {
 
     /**
      * Create a new clinical case
-     * @param question - Patient question or case description
      * @param title - Optional case title
+     * @param question - Patient question or case description
      * @returns Promise with case creation response
      */
-    async createCase(question: string, title?: string): Promise<CreateCaseResponse> {
+    async createCase(title: string, question: string): Promise<CreateCaseResponse> {
         const request: CreateCaseRequest = { question, title };
 
         const response = await fetch(`${API_BASE_URL}/api/create_case`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: getAuthHeaders(),
             body: JSON.stringify(request),
         });
 
         if (!response.ok) {
+            if (response.status === 401) {
+                throw new Error('Unauthorized. Please sign in.');
+            }
             throw new Error(`Failed to create case: ${response.statusText}`);
         }
 
@@ -97,9 +118,14 @@ export const backend = {
      * @returns Promise with full case data
      */
     async getCase(case_id: string): Promise<ClinicalCase> {
-        const response = await fetch(`${API_BASE_URL}/api/cases/${case_id}`);
+        const response = await fetch(`${API_BASE_URL}/api/cases/${case_id}`, {
+            headers: getAuthHeaders(),
+        });
 
         if (!response.ok) {
+            if (response.status === 401) {
+                throw new Error('Unauthorized. Please sign in.');
+            }
             if (response.status === 404) {
                 throw new Error('Case not found');
             }
@@ -114,9 +140,14 @@ export const backend = {
      * @returns Promise with list of cases
      */
     async getCases(): Promise<ClinicalCase[]> {
-        const response = await fetch(`${API_BASE_URL}/api/cases`);
+        const response = await fetch(`${API_BASE_URL}/api/cases`, {
+            headers: getAuthHeaders(),
+        });
 
         if (!response.ok) {
+            if (response.status === 401) {
+                throw new Error('Unauthorized. Please sign in.');
+            }
             throw new Error(`Failed to get cases: ${response.statusText}`);
         }
 
@@ -135,61 +166,102 @@ export const backend = {
         }));
     },
 
-    /**
-     * Stream case updates via Server-Sent Events
-     * @param case_id - The case ID to stream
-     * @param onMessage - Callback for new messages
-     * @param onStatus - Callback for status updates
-     * @param onDone - Callback when streaming is complete
-     * @param onError - Callback for errors
-     * @returns EventSource object (can be closed with eventSource.close())
-     */
-    streamCase(
+    streamCaseMockup(
         case_id: string,
-        onMessage?: (data: any) => void,
-        onStatus?: (status: string) => void,
-        onDone?: (status: string) => void,
+        onMessage?: (message: Message) => void,
+        onDone?: (message: Message) => void,
         onError?: (error: any) => void
     ): EventSource {
-        const eventSource = new EventSource(`${API_BASE_URL}/api/cases/${case_id}/stream`);
+        // Mock EventSource-like object that simulates SSE streaming
+        // Uses setTimeout to send messages asynchronously without blocking the main thread
+        interface MockEventSource extends EventSource {
+            _readyState: number;
+        }
 
-        eventSource.onmessage = (event) => {
-            try {
-                const data = JSON.parse(event.data);
+        const mockEventSource = {
+            _readyState: EventSource.CONNECTING,
+            get readyState() {
+                return this._readyState;
+            },
+            url: '',
+            withCredentials: false,
+            close: () => {},
+        } as MockEventSource;
 
-                switch (data.type) {
-                    case 'message':
-                        onMessage?.(data.data);
-                        break;
-                    case 'status':
-                        onStatus?.(data.status);
-                        break;
-                    case 'done':
-                        onDone?.(data.status);
-                        eventSource.close();
-                        break;
-                    case 'error':
-                        onError?.(new Error(data.message));
-                        eventSource.close();
-                        break;
-                    case 'timeout':
-                        onError?.(new Error('Stream timeout'));
-                        eventSource.close();
-                        break;
-                }
-            } catch (error) {
-                console.error('Error parsing SSE data:', error);
-                onError?.(error);
+        // Track if the stream is closed
+        let isClosed = false;
+        let messageIndex = 0;
+
+        // Get messages from sample case, excluding the first USER message
+        const sampleMessages = clinical_cases[0]!.messages.slice(1); // Skip first user message
+
+        // Function to send the next message
+        const sendNextMessage = () => {
+            if (isClosed) {
+                return;
             }
+            
+            // If all messages are sent, close the stream
+            if (messageIndex >= sampleMessages.length) {
+                onDone?.(sampleMessages[sampleMessages.length - 1]!);
+                mockEventSource._readyState = EventSource.CLOSED;
+                isClosed = true;
+                return;
+            }
+
+            const message = sampleMessages[messageIndex];
+            if (!message) {
+                return;
+            }
+            messageIndex++;
+
+            // Use setTimeout to ensure non-blocking execution
+            setTimeout(() => {
+                if (isClosed) {
+                    return;
+                }
+
+                try {
+                    switch (message.stage) {
+                        case MessageStage.THINKING:
+                            onMessage?.(message);
+                            break;
+
+                        case MessageStage.FINAL:
+                            onDone?.(message);
+                            mockEventSource._readyState = EventSource.CLOSED;
+                            isClosed = true;
+                            return; // Stop sending more messages
+
+                        case 'error':
+                            onError?.(new Error(message.text || 'Stream error'));
+                            mockEventSource._readyState = EventSource.CLOSED;
+                            isClosed = true;
+                            return;
+                    }
+
+                    // Schedule next message (vary delay between 3-5 seconds)
+                    const delay = 1000 + Math.random() * 500;
+                    setTimeout(sendNextMessage, delay);
+                } catch (error) {
+                    console.error('Error in mock stream:', error);
+                    onError?.(error);
+                    isClosed = true;
+                }
+            }, 0);
         };
 
-        eventSource.onerror = (error) => {
-            console.error('EventSource error:', error);
-            onError?.(error);
-            eventSource.close();
+        // Override close method
+        mockEventSource.close = () => {
+            isClosed = true;
+            mockEventSource._readyState = EventSource.CLOSED;
         };
 
-        return eventSource;
+        // Start streaming after a short delay to simulate connection establishment
+        mockEventSource._readyState = EventSource.OPEN;
+        setTimeout(sendNextMessage, 100);
+
+        return mockEventSource as EventSource;
     },
 
     /**

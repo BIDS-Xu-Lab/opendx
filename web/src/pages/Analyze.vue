@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue';
 import { useDataStore } from '../stores/DataStore';
 import { useCaseStore } from '../stores/CaseStore';
 import LeftSidebar from '../components/LeftSidebar.vue';
@@ -7,7 +7,7 @@ import { MessageType } from '../models/ClinicalCase';
 import type { Message } from '../models/ClinicalCase';
 import { marked } from 'marked';
 import { useToast } from 'primevue/usetoast';
-import { clinical_case as sample_clinical_case } from '../models/Samples';
+import { clinical_cases as sample_clinical_cases } from '../models/Samples';
 
 const toast = useToast();
 
@@ -16,7 +16,6 @@ import Button from 'primevue/button';
 import Textarea from 'primevue/textarea';
 
 const data_store = useDataStore();
-data_store;
 const case_store = useCaseStore();
 
 // Computed properties
@@ -126,369 +125,304 @@ const copyMessageToClipboard = (message: Message) => {
     });
 };
 
+const togglePlaceholderDetails = () => {
+    console.log('togglePlaceholderDetails');
+    case_store.show_thinking = !case_store.show_thinking;
+};
+
+// Auto-scroll functionality
+const chat_body_ref = ref<HTMLElement | null>(null);
+
+const scrollToBottom = () => {
+    if (chat_body_ref.value) {
+        chat_body_ref.value.scrollTop = chat_body_ref.value.scrollHeight;
+
+        console.log('scrolled to bottom', chat_body_ref.value.scrollTop, chat_body_ref.value.scrollHeight);
+    }
+};
+
+// Also watch stream updates for typing animation
+watch(() => case_store.stream_updated_at, async () => {
+    await nextTick();
+    scrollToBottom();
+});
+
+watch(() => case_store.rendered_messages.length, async () => {
+    await nextTick();
+    scrollToBottom();
+});
+
 // Initialize case data
 onMounted(() => {
     if (case_store.clinical_case == null) {
-        case_store.setClinicalCase(sample_clinical_case);
+        case_store.setClinicalCase(sample_clinical_cases[0]!);
     }
 
     case_store.cite_popup_ref = cite_popup_ref.value;
+
+    // Start streaming if case exists and not already streaming
+    if (case_store.clinical_case && !case_store.is_streaming) {
+        // Only start streaming if there's only the user message (no agent responses yet)
+        const userMessages = case_store.clinical_case.messages.filter(
+            m => m.message_type === MessageType.USER
+        );
+        if (userMessages.length > 0 && case_store.clinical_case.messages.length === userMessages.length) {
+            case_store.startMockupStream();
+        }
+    }
+
+    // Scroll to bottom on initial mount
+    nextTick(() => scrollToBottom());
+});
+
+// Cleanup streaming on unmount
+onBeforeUnmount(() => {
+    case_store.stopStream();
 });
 </script>
 
 <template>
 <LeftSidebar />
-<div class="main-container">
-    <div class="main-content flex flex-row h-screen">
+<div class="main-container flex flex-col h-screen">
 
-        <Splitter style="height: 100svh; border: 0;">
+
+<TopMenu />
+
+<div ref="chat_body_ref" class="scroll-wrapper flex-1 overflow-y-auto">
+    <div class="main-content">
+        <!-- Chat Body -->
+        <div class="chat-body p-4 w-full">
+        <template v-for="message, message_index in case_store.filterRenderedMessages()" :key="message.message_id">
+            <div v-if="['USER'].includes(message.message_type)"
+                class="message-item user-message ">
+                <div class="message-header flex justify-between items-center gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="font-medium text-sm">
+                            <font-awesome-icon icon="fa-solid fa-user" />
+                            User Message:
+                        </span>
+                        <span class="text-xs">
+                            {{ new Date(message.created_at).toLocaleTimeString() }}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="message-content prose max-w-none text-base/6"
+                    v-html="renderMessageText(message.text || '')" 
+                    v-cite>
+                </div>
+            </div>
+
+            <div v-else-if="['AGENT'].includes(message.message_type) && (case_store.show_thinking && message.stage !== 'final')"
+                class="message-item agent-message " >
+                <div class="message-header message-header-on-timeline p-2 flex justify-between items-center gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="role-icon font-medium text-sm">
+                            <font-awesome-icon icon="fa-solid fa-robot" />
+                        </span>
+                        <span>
+                            {{ message.payload_json?.agent_name }}
+                        </span>
+                        <span class="text-xs">
+                            {{ new Date(message.created_at).toLocaleTimeString() }}
+                        </span>
+                    </div>
+                    
+                    <!-- System message toolbar -->
+                    <div class="message-toolbar mt-2 flex gap-2">
+                        <Button size="small" icon="pi pi-thumbs-up" class="p-button-text p-button-sm" />
+                        <Button size="small" icon="pi pi-thumbs-down" class="p-button-text p-button-sm" />
+                        <Button size="small" icon="pi pi-copy"  
+                            class="p-button-text p-button-sm"
+                            @click="copyMessageToClipboard(message)" />
+                    </div>
+                </div>
+                
+                <div class="message-content p-2 prose max-w-none text-base/6 text-sm"
+                    v-html="renderMessageText(message.text || '')" 
+                    v-cite>
+                </div>
+            </div>
+
+            <div v-else-if="['AGENT'].includes(message.message_type) && message.stage == 'final'"
+                class="message-item border rounded-lg" >
+                <div class="message-header rounded-t-lg flex justify-between items-center gap-2 px-4 py-2 !h-12 bg-gray-100 dark:bg-gray-900 border-b">
+                    <div class="flex items-center gap-2">
+                        <span class="font-medium text-sm">
+                            <font-awesome-icon icon="fa-solid fa-check-circle" />
+                        </span>
+                        <span>
+                            Summary
+                        </span>
+                    </div>
+                    
+                    <!-- System message toolbar -->
+                    <div class="message-toolbar mt-2 flex gap-2">
+                        <Button size="small" icon="pi pi-thumbs-up" class="p-button-text p-button-sm" />
+                        <Button size="small" icon="pi pi-thumbs-down" class="p-button-text p-button-sm" />
+                        <Button size="small" icon="pi pi-copy"      
+                            @click="copyMessageToClipboard(message)"
+                            class="p-button-text p-button-sm" />
+                    </div>
+                </div>
+                
+                <div class="message-content prose max-w-none text-base/6 p-4">
+                    <div v-if="case_store.is_streaming && !message.text" class="typing-indicator">
+                        <span class="typing-dot"></span>
+                        <span class="typing-dot"></span>
+                        <span class="typing-dot"></span>
+                    </div>
+                    <div v-else
+                        v-html="renderMessageText(message.text || '')" 
+                        v-cite>
+                    </div>
+                </div>
+            </div>
             
-        <!-- Chat Panel -->
-        <SplitterPanel class="flex flex-col" :size="45" :minSize="30">
-            <!-- Chat Header -->
-            <div class="chat-header h-12 flex items-center justify-between pl-4 border-b">
-                <div class="flex items-center gap-2">
-                    <font-awesome-icon icon="fa-solid fa-magnifying-glass" />
-                    <span class="font-semibold">
-                        Analyzer
+
+            <div v-else-if="['PLACEHOLDER'].includes(message.message_type)"
+                class="message-item placeholder-message " >
+                <div class="message-content italic text-center">
+                    <font-awesome-icon icon="fa-regular fa-clock" />
+                    {{ message.text }}
+
+                    <span class="text-sm cursor-pointer" @click="togglePlaceholderDetails">
+                        (view details)
                     </span>
-
-                    <input type="text" 
-                        v-model="case_store.raw_filter_keywords" 
-                        placeholder="Filter messages by keyword" 
-                        style="padding-right: 2rem;"
-                        class="p-1 border-1" />
-
-                    <Button icon="pi pi-times" 
-                        size="small" 
-                        class="p-button-text" text
-                        @click="case_store.raw_filter_keywords = ''"
-                        style="margin-left: -2.5rem" />
-                </div>
-                <div class="flex items-center gap-2">
-
-                    <ToggleSwitch 
-                        id="show_thinking"
-                        v-model="case_store.show_thinking" 
-                        class="text-xs" />
-
-                    <label for="show_thinking">
-                        Thinking
-                    </label>
-
-                    <Button type="button" 
-                        text
-                        size="small"
-                        class="mr-2"
-                        icon="pi pi-ellipsis-v" 
-                        @click="toggleChatToolbarMenu" 
-                        aria-haspopup="true" 
-                        aria-controls="chat_toolbar_menu" />
-
-                    <Menu ref="chat_toolbar_menu_ref"
-                        id="chat_toolbar_menu" 
-                        :model="chat_toolbar_items" 
-                        :popup="true" />
-                        
-                    <!-- <Rating v-model="case_store.chat_rating" :stars="5" class="text-sm" /> -->
                 </div>
             </div>
 
-            <!-- Chat Body -->
-            <div class="chat-body flex-1 overflow-y-auto p-4 ">
-                <template v-for="message in case_store.filterRenderedMessages()" :key="message.message_id">
-                    <div v-if="['USER'].includes(message.message_type)"
-                        class="message-item user-message ">
-                        <div class="message-header flex justify-between items-center gap-2">
-                            <div class="flex items-center gap-2">
-                                <span class="font-medium text-sm">
-                                    <font-awesome-icon icon="fa-solid fa-user" />
-                                </span>
-                                <span class="text-xs">
-                                    {{ new Date(message.created_at).toLocaleTimeString() }}
-                                </span>
-                            </div>
-                        </div>
-                        
-                        <div class="message-content prose max-w-none text-base/6"
-                            v-html="renderMessageText(message.text || '')" 
-                            v-cite>
-                        </div>
-                    </div>
 
-                    <div v-else-if="['AGENT'].includes(message.message_type) && (case_store.show_thinking && message.stage !== 'final')"
-                        class="message-item agent-message " >
-                        <div class="message-header message-header-on-timeline p-2 flex justify-between items-center gap-2">
-                            <div class="flex items-center gap-2">
-                                <span class="role-icon font-medium text-sm">
-                                    <font-awesome-icon icon="fa-solid fa-robot" />
-                                </span>
-                                <span>
-                                    {{ message.payload_json?.agent_name }}
-                                </span>
-                                <span class="text-xs">
-                                    {{ new Date(message.created_at).toLocaleTimeString() }}
-                                </span>
-                            </div>
-                            
-                            <!-- System message toolbar -->
-                            <div class="message-toolbar mt-2 flex gap-2">
-                                <Button size="small" icon="pi pi-thumbs-up" class="p-button-text p-button-sm" />
-                                <Button size="small" icon="pi pi-thumbs-down" class="p-button-text p-button-sm" />
-                                <Button size="small" icon="pi pi-copy"  
-                                    class="p-button-text p-button-sm"
-                                    @click="copyMessageToClipboard(message)" />
-                            </div>
-                        </div>
-                        
-                        <div class="message-content p-2 prose max-w-none text-base/6 text-sm"
-                            v-html="renderMessageText(message.text || '')" 
-                            v-cite>
-                        </div>
-                    </div>
-
-                    <div v-else-if="['AGENT'].includes(message.message_type) && message.stage == 'final'"
-                        class="message-item border rounded-lg" >
-                        <div class="message-header rounded-t-lg flex justify-between items-center gap-2 px-4 py-2 !h-12 bg-gray-100 dark:bg-gray-900 border-b">
-                            <div class="flex items-center gap-2">
-                                <span class="font-medium text-sm">
-                                    <font-awesome-icon icon="fa-solid fa-check-circle" />
-                                </span>
-                                <span>
-                                    Answer to your question
-                                </span>
-                            </div>
-                            
-                            <!-- System message toolbar -->
-                            <div class="message-toolbar mt-2 flex gap-2">
-                                <Button size="small" icon="pi pi-thumbs-up" class="p-button-text p-button-sm" />
-                                <Button size="small" icon="pi pi-thumbs-down" class="p-button-text p-button-sm" />
-                                <Button size="small" icon="pi pi-copy"      
-                                    @click="copyMessageToClipboard(message)"
-                                    class="p-button-text p-button-sm" />
-                            </div>
-                        </div>
-                        
-                        <div class="message-content prose max-w-none text-base/6 p-4"
-                            v-html="renderMessageText(message.text || '')" 
-                            v-cite>
-                        </div>
-                    </div>
-                    
-
-                    <div v-else-if="['PLACEHOLDER'].includes(message.message_type)"
-                        class="message-item placeholder-message " >
-                        <div class="message-content italic text-center">
-                            <font-awesome-icon icon="fa-regular fa-clock" />
-                            {{ message.text }}
-                        </div>
-                    </div>
-
-                    <div v-else-if="['TOOL'].includes(message.message_type) && (message.stage == 'final' || case_store.show_thinking)"
-                        class="message-item tool-message " >
-                        <div class="message-header message-header-on-timeline p-2 flex justify-between items-center gap-2">
-                            <div class="flex items-center gap-2">
-                                <span class="role-icon font-medium text-sm">
-                                    <font-awesome-icon icon="fa-solid fa-screwdriver-wrench" />
-                                </span>
-                                <span class="italic">
-                                    {{ message.payload_json?.tool_name }}
-                                </span>
-                                <span class="text-xs">
-                                    {{ new Date(message.created_at).toLocaleTimeString() }}
-                                </span>
-                            </div>
-                            
-                            <!-- System message toolbar -->
-                            <div class="message-toolbar mt-2 flex gap-2">
-                                <Button size="small" icon="pi pi-thumbs-up" class="p-button-text p-button-sm" />
-                                <Button size="small" icon="pi pi-thumbs-down" class="p-button-text p-button-sm" />
-                                <Button size="small" icon="pi pi-copy" 
-                                    class="p-button-text p-button-sm"
-                                    @click="copyMessageToClipboard(message)" />
-                            </div>
-                        </div>
-                        
-                        <div class="message-content text-sm p-2"
-                            v-html="renderMessageText(message.text || '')" 
-                            v-cite>
-                        </div>
-
-                        <div class="flex flex-row gap-2 pt-2 mt-2 p-2">
-                            <div v-for="parameter_key in Object.keys(message.payload_json?.tool_parameters)" :key="parameter_key"
-                                class="flex flex-col">
-                                <span class="text-xs">
-                                    {{ parameter_key }}
-                                </span>
-                                <span class="text-sm">
-                                    {{ message.payload_json?.tool_parameters[parameter_key] }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </template>
-
-                <div v-if="case_store.filterRenderedMessages().length === 0"
-                    class="message-item user-message ">                    
-                    <div class="message-content prose max-w-none text-base/6">
-                        <p>
-                            No messages found for the given keywords in any of the processing steps. Please try other keywords or clear the filter.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Chat Footer -->
-            <div class="chat-footer border-t pl-4 pr-2 py-2 shadow-[0_-4px_6px_rgba(0,0,0,0.1)]">
-                <div class="flex flex-col gap-2">
-                    <!-- Input area -->
-                    <Textarea 
-                        v-model="case_store.input_text"
-                        placeholder="Type your follow-up question here..."
-                        :auto-resize="true"
-                        rows="1"
-                        style="max-height: 10rem;"
-                        class="w-full"
-                        @keydown.enter.prevent="handleSubmitMessage" />
-                    
-                    <!-- Action buttons -->
-                    <div class="flex justify-between items-center">
-                        <div class="flex gap-2">
-                            <Button icon="pi pi-upload" size="small" class="p-button-text" />
-                            <Button icon="pi pi-search" size="small" class="p-button-text" />
-                        </div>
-                        <div class="flex gap-2">
-                            <Button 
-                                icon="pi pi-microphone" 
-                                size="small" 
-                                :class="{ 'p-button-warning': case_store.is_recording }"
-                                @click="case_store.toggleRecording" />
-                            <Button 
-                                icon="pi pi-send" 
-                                size="small" 
-                                @click="handleSubmitMessage" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        
-        </SplitterPanel>
-
-
-        <!-- Evidence Panel -->
-        <SplitterPanel class="flex flex-col" :size="55" :minSize="30">
-            <!-- Evidence Header -->
-            <div class="evidence-header h-12 flex items-center justify-between pl-4 border-b"
-                style="border-color: var(--border-color);">
-                <div class="flex items-center gap-2">
-                    <i class="pi pi-book"></i>
-                    <span class="font-semibold">
-                        Evidence
-                    </span>
-                    <span class="text-sm text-gray-500">({{ evidence_count }})</span>
-                </div>
-                <div class="flex items-center gap-2">
-
-                    <Button type="button" 
-                        text
-                        size="small"
-                        class="mr-2"
-                        icon="pi pi-ellipsis-v" 
-                        @click="toggleEvidenceToolbarMenu" 
-                        aria-haspopup="true" 
-                        aria-controls="chat_toolbar_menu" />
-                    <Menu ref="evidence_toolbar_menu_ref"
-                        id="evidence_toolbar_menu" 
-                        :model="evidence_toolbar_items" 
-                        :popup="true" />
-                </div>
-            </div>
-
-            <!-- Evidence Body -->
-            <div class="evidence-body flex-1 flex">
-
-                <!-- Evidence Tabs (Left 1/4) -->
-                <div class="w-1/4 border-r overflow-x-hidden pl-2"
-                    style="overflow-y: auto; height: calc(100svh - 3rem);">
-                    <div v-for="(snippet, index) in evidence_snippets" 
-                        :key="snippet.snippet_id"
-                        :evidence-index="index"
-                        class="evidence-tab p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 border-btransition-colors"
-                        :class="{ 'bg-gray-100 dark:bg-gray-800 shadow-sm': snippet.snippet_id === case_store.current_evidence_tab }"
-                        @click="handleEvidenceTabChange(snippet.snippet_id)">
-                        <div class="flex items-center gap-2">
-                            <span class="text-sm font-medium">
-                                ({{ snippet.index + 1 }})
+            <div v-else-if="['SYSTEM'].includes(message.message_type) && (case_store.show_thinking)"
+                class="message-item tool-message " >
+                <div class="message-header message-header-on-timeline p-2 flex justify-between items-center gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="role-icon font-medium text-sm">
+                            <font-awesome-icon icon="fa-solid fa-circle-nodes"
+                                :class="message_index == case_store.filterRenderedMessages().length - 1 && case_store.is_streaming ? 'animate-spin' : ''" />
+                        </span>
+                        <div class="flex flex-col text-sm/3">
+                            <span class="text-xs">
+                                {{ message.payload_json?.agent_name }}
                             </span>
-                            <template v-if="['pubmed', 'pmc', 'doi', 'webpage'].includes(snippet.source_type)">
-                                <font-awesome-icon icon="fa-solid fa-globe" />
-                                <span class="text-sm font-medium truncate">
-                                    {{ snippet.source_type }}
-                                </span>
-
-                                <span class="text-sm font-medium truncate">
-                                    {{ snippet.source_id }}
-                                </span>
-
-                            </template>
-
-                            <template v-else-if="['clinical_guideline'].includes(snippet.source_type)">
-                                <font-awesome-icon icon="fa-solid fa-book" />
-                                <span>
-                                    Guideline
-                                </span>
-                            </template>
-
-                            <template v-else>
-                                <font-awesome-icon icon="fa-regular fa-file-lines" />
-
-                                <span class="text-sm font-medium truncate">
-                                    {{ snippet.source_type.replace('_', ' ').toUpperCase() }}
-                                </span>
-                            </template>
-                        </div>
-
-
-                        <div class="text-xs text-gray-500 mt-1 truncate">
-                            {{ snippet.text.substring(0, 50) }}...
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Evidence Detail (Right 3/4) -->
-                <div class="w-3/4 p-4 overflow-y-auto">
-                    <div v-if="current_evidence" class="evidence-detail">
-                        <div class="evidence-header mb-4">
-                            <h3 class="text-lg font-semibold mb-2">{{ current_evidence.source_type.replace('_', ' ').toUpperCase() }}</h3>
-                            <div class="text-sm text-gray-600 mb-2">
-                                <span class="font-medium">Source:</span> {{ current_evidence.source_citation }}
-                            </div>
-                            <div v-if="current_evidence.source_url" class="text-sm text-blue-600 mb-2">
-                                <a :href="current_evidence.source_url" target="_blank" class="hover:underline">
-                                    {{ current_evidence.source_url }}
-                                </a>
-                            </div>
-                        </div>
-                        
-                        <div class="evidence-content">
-                            <div class="prose max-w-none">
-                                <p class="whitespace-pre-wrap">{{ current_evidence.text }}</p>
-                            </div>
+                            <span class="italic">
+                                {{ message.text }}
+                            </span>
                         </div>
                     </div>
                     
-                    <div v-else class="flex items-center justify-center h-full">
-                        <div class="text-center">
-                            <i class="pi pi-book text-4xl mb-4"></i>
-                            <p>No evidence selected</p>
-                        </div>
+                    <!-- System message toolbar -->
+                    <div class="message-toolbar mt-2 flex gap-2">
+                        
                     </div>
                 </div>
             </div>
-        </SplitterPanel>
-        </Splitter>
+
+
+            <div v-else-if="['TOOL'].includes(message.message_type) && (message.stage == 'final' || case_store.show_thinking)"
+                class="message-item tool-message " >
+                <div class="message-header message-header-on-timeline p-2 flex justify-between items-center gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="role-icon font-medium text-sm">
+                            <font-awesome-icon icon="fa-solid fa-screwdriver-wrench" />
+                        </span>
+                        <span class="italic">
+                            {{ message.payload_json?.tool_name }}
+                        </span>
+                        <span class="text-xs">
+                            {{ new Date(message.created_at).toLocaleTimeString() }}
+                        </span>
+                    </div>
+                    
+                    <!-- System message toolbar -->
+                    <div class="message-toolbar mt-2 flex gap-2">
+                        <Button size="small" icon="pi pi-thumbs-up" class="p-button-text p-button-sm" />
+                        <Button size="small" icon="pi pi-thumbs-down" class="p-button-text p-button-sm" />
+                        <Button size="small" icon="pi pi-copy" 
+                            class="p-button-text p-button-sm"
+                            @click="copyMessageToClipboard(message)" />
+                    </div>
+                </div>
+                
+                <div class="message-content text-sm p-2"
+                    v-html="renderMessageText(message.text || '')" 
+                    v-cite>
+                </div>
+
+                <div class="flex flex-row gap-2 pt-2 mt-2 p-2">
+                    <div v-for="parameter_key in Object.keys(message.payload_json?.tool_parameters)" :key="parameter_key"
+                        class="flex flex-col">
+                        <span class="text-xs">
+                            {{ parameter_key }}
+                        </span>
+                        <span class="text-sm">
+                            {{ message.payload_json?.tool_parameters[parameter_key] }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="message_index == case_store.filterRenderedMessages().length - 1 && case_store.is_streaming">
+                <div class="typing-indicator">
+                    <!-- <font-awesome-icon icon="fa-solid fa-spinner" class="animate-spin" /> -->
+                    <span class="typing-dot"></span>
+                    <span class="typing-dot"></span>
+                    <span class="typing-dot"></span>
+                </div>
+            </div>
+        </template>
+
+        <div v-if="case_store.filterRenderedMessages().length === 0"
+            class="message-item user-message ">                    
+            <div class="message-content prose max-w-none text-base/6">
+                <p>
+                    No messages found for the given keywords in any of the processing steps. Please try other keywords or clear the filter.
+                </p>
+            </div>
+        </div>
+        </div>
     </div>
 </div>
+
+<!-- Chat Footer -->
+<div class="chat-footer w-full border-t pl-4 pr-2 py-4">
+    <div class="flex flex-col gap-2">
+        <!-- Input area -->
+        <Textarea 
+            v-model="case_store.input_text"
+            placeholder="Type your follow-up question here..."
+            :auto-resize="true"
+            rows="1"
+            style="max-height: 10rem;"
+            class="w-full"
+            @keydown.enter.prevent="handleSubmitMessage" />
+        
+        <!-- Action buttons -->
+        <div class="flex justify-between items-center">
+            <div class="flex gap-2">
+                <Button icon="pi pi-upload" size="small" class="p-button-text" />
+                <Button icon="pi pi-search" size="small" class="p-button-text" />
+            </div>
+            <div class="flex gap-2">
+                <Button 
+                    icon="pi pi-microphone" 
+                    size="small" 
+                    :class="{ 'p-button-warning': case_store.is_recording }"
+                    @click="case_store.toggleRecording" />
+                <Button 
+                    icon="pi pi-send" 
+                    size="small" 
+                    @click="handleSubmitMessage" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</div>
+
 
 
 
@@ -518,17 +452,30 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.main-container {
-    height: 100vh;
-    overflow: hidden;
+.scroll-wrapper {
+    width: 100%;
+    position: relative;
 }
 
 .main-content {
-    height: calc(100svh - 3rem); /* Adjust for TopMenu height */
+    min-width: 30rem;
+    max-width: 60rem;
+    width: auto;
+    margin: 0 auto;
 }
 
 .chat-body {
-    scrollbar-width: thin;
+    padding-bottom: 25svh;
+}
+
+.chat-footer {
+    max-width: 60rem;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--background-color);
+    z-index: 10;
 }
 
 .evidence-body {
@@ -554,9 +501,13 @@ onMounted(() => {
 }
 
 .role-icon {
-    background-color: var(--border-color);
+    background-color: var(--working-background-color);
     padding: 0.25rem;
     border-radius: 0.25rem;
+}
+.user-message {
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--border-color);
 }
 .tool-message {
     margin-left: 1rem;
@@ -601,5 +552,41 @@ onMounted(() => {
 .chat-body::-webkit-scrollbar-thumb:hover,
 .evidence-body::-webkit-scrollbar-thumb:hover {
     background-color: #9ca3af;
+}
+
+/* Typing animation */
+.typing-indicator {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.typing-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--text-color);
+    opacity: 0.6;
+    animation: typing-bounce 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.typing-dot:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+@keyframes typing-bounce {
+    0%, 80%, 100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 </style>

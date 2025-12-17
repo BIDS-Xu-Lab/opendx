@@ -88,13 +88,12 @@ export interface Message {
   message_type: MessageType;
   text?: string | "";
   payload_json?: { [key: string]: any };
-  stage: string | "final";  // the stage of the message, e.g., "final", "intermediate", "thinking", "planning", etc.
+  stage: string | "final";  // the stage of the message, e.g., "final", "thinking", "planning", etc.
   created_at: string;
 }
 
 export const MessageStage = {
   FINAL: "final",
-  INTERMEDIATE: "intermediate",
   THINKING: "thinking",
   PLANNING: "planning",
   TOOLING: "tooling",

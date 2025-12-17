@@ -3,6 +3,8 @@ import { ref, onMounted } from 'vue';
 import { useDataStore } from '../stores/DataStore';
 import { backend } from '../Backend';
 import type { ClinicalCase } from '../models/ClinicalCase';
+import LeftSidebar from '../components/LeftSidebar.vue';
+import TopMenu from '../components/TopMenu.vue';
 
 const data_store = useDataStore();
 
@@ -108,7 +110,10 @@ onMounted(() => {
 <template>
 <LeftSidebar />
 <div class="main-container">
-    <div class="w-3/4 mx-auto mt-12">
+
+    <TopMenu />
+
+    <div class="w-3/4 mx-auto mt-4">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold">Case History</h1>
             <Button

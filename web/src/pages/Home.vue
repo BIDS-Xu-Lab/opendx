@@ -30,7 +30,7 @@ const data_store = useDataStore();
     <div class="main-content flex flex-col items-center justify-center">
         <div class="mt-16 items-center justify-center flex flex-col gap-4">
             <div class="font-bold text-6xl">
-                OpenMDX
+                MedAgent
             </div>
             <div class="text-xl">
                 Transforming Clinical Questions into Diagnostic Insights
@@ -40,7 +40,7 @@ const data_store = useDataStore();
         <CaseInputArea />
 
 
-        <div class="flex flex-col items-center gap-4 mb-4 w-1/2 justify-center mt-4">
+        <div class="flex flex-col items-center gap-4 mb-4 xl:w-1/2 md:w-full justify-center mt-4">
             <p class="text-2xl font-bold text-on-line">
                 <i />
                 <span>
@@ -80,7 +80,7 @@ const data_store = useDataStore();
         </div>
 
 
-        <div class="flex flex-col items-center gap-4 mb-4 w-1/2 justify-center mt-4">
+        <div class="flex flex-col items-center gap-4 mb-4 xl:w-1/2 md:w-full justify-center mt-4">
             <p class="text-2xl font-bold text-on-line">
                 <i />
                 <span>

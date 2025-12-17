@@ -1,15 +1,36 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import router from '../router';
-import { questions } from '../models/Samples';
+import { questions, clinical_cases } from '../models/Samples';
+import { useCaseStore } from '../stores/CaseStore';
+import { MessageType } from '../models/ClinicalCase';
 const input_text = ref('');
 const el_textarea = ref(null);
 const n_rows = ref(1);
+const case_store = useCaseStore();
 
 const onClickSubmit = () => {
-    console.log(input_text.value);
-
-    router.push('/analyze');
+    // Load the first sample case for demo
+    const sampleCase = clinical_cases[0];
+    if (sampleCase) {
+        // Create a new case with only the first USER message for streaming demo
+        const firstUserMessage = sampleCase.messages.find(m => m.message_type === MessageType.USER);
+        if (firstUserMessage) {
+            const demoCase = {
+                ...sampleCase,
+                messages: [firstUserMessage],
+                evidence_snippets: sampleCase.evidence_snippets, // Keep evidence snippets
+                status: 'PROCESSING' as const,
+            };
+            case_store.setClinicalCase(demoCase);
+            // Navigate to analyze page
+            router.push('/analyze');
+        } else {
+            console.error('No user message found in sample case');
+        }
+    } else {
+        console.error('No sample case found');
+    }
 }
 
 const onClickSample = (sample: any) => {
@@ -100,7 +121,7 @@ const get_samples = () => {
     </div>
 
     <!-- Samples -->
-    <div class="flex lg:flex-row max-sm:flex-col gap-4 mb-2 lg:w-1/2">
+    <!-- <div class="flex lg:flex-row max-sm:flex-col gap-4 mb-2 lg:w-1/2">
 
         <Card v-for="sample in get_samples()" 
             class="lg:w-1/3 cursor-pointer clickable-sample"
@@ -114,11 +135,11 @@ const get_samples = () => {
                 </p>
             </template>
         </Card>
-    </div>
+    </div> -->
 
 
     <!-- More samples -->
-    <div class="flex flex-col items-center gap-4 mb-2 w-1/2 justify-center mt-4">
+    <!-- <div class="flex flex-col items-center gap-4 mb-2 w-1/2 justify-center mt-4">
         <p class="cursor-pointer" @click="onClickSeeMore">
             See more case samples ... 
             <template v-if="flag_show_more_samples">
@@ -136,7 +157,7 @@ const get_samples = () => {
                 </p>
             </Fieldset>
         </template>
-    </div>
+    </div> -->
     
 </div>
 </template>

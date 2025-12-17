@@ -1,59 +1,29 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import router from '../router';
+import { useUserStore } from '../stores/UserStore';
 
-const items = ref([
-{
-    label: 'Company',
-    root: true,
-    items: [
-        [
-            {
-                items: [
-                    { label: 'Features', icon: 'pi pi-list', subtext: 'Subtext of item' },
-                    { label: 'Customers', icon: 'pi pi-users', subtext: 'Subtext of item' },
-                    { label: 'Case Studies', icon: 'pi pi-file', subtext: 'Subtext of item' }
-                ]
-            }
-        ],
-        [
-            {
-                items: [
-                    { label: 'Solutions', icon: 'pi pi-shield', subtext: 'Subtext of item' },
-                    { label: 'Faq', icon: 'pi pi-question', subtext: 'Subtext of item' },
-                    { label: 'Library', icon: 'pi pi-search', subtext: 'Subtext of item' }
-                ]
-            }
-        ],
-        [
-            {
-                items: [
-                    { label: 'Community', icon: 'pi pi-comments', subtext: 'Subtext of item' },
-                    { label: 'Rewards', icon: 'pi pi-star', subtext: 'Subtext of item' },
-                    { label: 'Investors', icon: 'pi pi-globe', subtext: 'Subtext of item' }
-                ]
-            }
-        ],
-        [
-            {
-                items: [{ image: 'https://primefaces.org/cdn/primevue/images/uikit/uikit-system.png', label: 'GET STARTED', subtext: 'Build spectacular apps in no time.' }]
-            }
-        ]
-    ]
-},
-{
-    label: 'Resources',
-    root: true
-},
-{
-    label: 'Contact',
-    root: true
-}
-]);
+const items = ref([]);
+const user_store = useUserStore();
 
+const isLoggedIn = computed(() => user_store.isLoggedIn);
+const userEmail = computed(() => user_store.userEmail);
 
 const onClickSignIn = () => {
     router.push('/login');
+}
+
+const onClickSignUp = () => {
+    router.push('/signup');
+}
+
+const onClickSignOut = async () => {
+    const result = await user_store.signOut();
+    if (result.success) {
+        router.push('/');
+    } else {
+        console.error('Sign out failed:', result.error);
+    }
 }
 
 </script>
@@ -85,9 +55,29 @@ const onClickSignIn = () => {
     </template>
     -->
     <template #end>
-        <Button size="small" 
-            @click="onClickSignIn"
-            label="Sign In" icon="pi pi-user" />
+        <div v-if="!isLoggedIn" class="flex items-center gap-2">
+            <Button size="small"
+                @click="onClickSignUp"
+                label="Sign Up"
+                icon="pi pi-user-plus"
+                outlined />
+            <Button size="small"
+                @click="onClickSignIn"
+                label="Sign In"
+                icon="pi pi-user" />
+        </div>
+        <div v-else class="flex items-center gap-3">
+            <span class="text-sm">
+                <!-- Welcome, {{ userEmail }} -->
+                Welcome, User
+            </span>
+            <Button size="small"
+                text
+                v-tooltip.bottom="'Sign out'"
+                @click="onClickSignOut"
+                icon="pi pi-sign-out"
+                severity="secondary" />
+        </div>
     </template>
 </MegaMenu>
 </div>

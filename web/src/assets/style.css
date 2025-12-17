@@ -18,6 +18,7 @@
   --background-color: rgb(36, 36, 36);
   --border-color: rgb(63, 63, 63);
   --shadow-color: rgba(221, 221, 221, 0.1);
+  --working-background-color: rgb(0, 35, 48);
   
   --hover-color: rgba(0, 0, 0, 0.1);
 
@@ -36,6 +37,7 @@
     --background-color: rgb(255, 255, 255);
     --border-color: rgb(226, 226, 226);
     --shadow-color: rgba(0, 0, 0, 0.1);
+    --working-background-color: rgb(221, 246, 255);
 
     --hover-color: rgba(255, 255, 255, 0.3);
 
@@ -83,28 +85,50 @@ body {
 .message-content h1 {
     @apply text-xl font-bold;
     color: var(--text-color);
+    margin: 0 0 0.5rem 0;
 }
 .message-content h2 {
     @apply text-lg font-bold;
     color: var(--text-color);
+    margin: 0 0 0.4rem 0;
 }
 .message-content h3 {
     @apply text-base font-bold;
     color: var(--text-color);
+    margin: 0 0 0.3rem 0;
 }
 .message-content h4 {
-  @apply text-base;
-  color: var(--text-color);
+    @apply text-base;
+    color: var(--text-color);
+    margin: 0 0 0.2rem 0;
 }
 .message-content h5 {
-  @apply text-base italic;
-  color: var(--text-color);
+    @apply text-base italic;
+    color: var(--text-color);
+    margin: 0 0 0.1rem 0;
 }
 .message-content h6 {
-  @apply text-sm italic;
-  color: var(--text-color);
+    @apply text-sm italic;
+    color: var(--text-color);
+    margin: 0 0 0.1rem 0;
 }
-
+.message-content p {
+    @apply text-base;
+    margin: 0.2rem 0;
+}
+.message-content table {
+    margin: 0.2rem 0;
+}
+.message-content ul,
+.message-content ol {
+  margin: 0.2rem 0;
+}
+.message-content li {
+  margin: 0 0 0.1rem 0;
+}
+.message-content hr {
+  margin: 0.5rem 0;
+}
 .prose {
   color: var(--text-color);
 }
