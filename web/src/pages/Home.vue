@@ -3,16 +3,27 @@ import { useDataStore } from '../stores/DataStore';
 import CaseInputArea from '../components/CaseInputArea.vue';
 import LeftSidebar from '../components/LeftSidebar.vue';
 import TopMenu from '../components/TopMenu.vue';
-const store = useDataStore();
+const data_store = useDataStore();
 
 </script>
 
 <template>
 <LeftSidebar />
 <div class="main-container">
+    <div class="bg-container">
+        <Aurora 
+            :color-stops="data_store.isDarkMode() ? 
+                ['#172d40', '#0f210d', '#2d1b0b'] : 
+                ['#bcdefb', '#ffe666', '#e0b3ff']"
+            :amplitude="1.0"
+            :blend="0.5"
+            :speed="1.0"
+            :intensity="1.0"
+            class="w-full h-full"
+        />
+    </div>
 
     <TopMenu />
-
 
     <div class="main-content flex flex-col items-center justify-center">
         <div class="mt-16 items-center justify-center flex flex-col gap-4">
