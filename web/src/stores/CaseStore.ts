@@ -313,6 +313,7 @@ export const useCaseStore = defineStore('case', {
                 // Start chat stream from backend
                 const stream = await backend.chat(
                     caseText,
+                    // onProgress:
                     (message: string) => {
                         // Handle progress messages
                         const progressMessage = createEmptyMessage(
@@ -324,6 +325,7 @@ export const useCaseStore = defineStore('case', {
                         );
                         this.addMessage(progressMessage);
                     },
+                    // onResult:
                     (data: any) => {
                         // Handle result data
                         const resultText = data.overall_reasoning || '';
@@ -346,6 +348,7 @@ export const useCaseStore = defineStore('case', {
                             this.clinical_case.status = 'COMPLETED' as any;
                         }
                     },
+                    // onError:
                     (error: string) => {
                         // Handle errors
                         console.error('Stream error:', error);
@@ -364,6 +367,7 @@ export const useCaseStore = defineStore('case', {
                             this.clinical_case.status = 'ERROR' as any;
                         }
                     },
+                    // onCaseCreated:
                     (case_id: string) => {
                         // Handle case created
                         if (this.clinical_case) {

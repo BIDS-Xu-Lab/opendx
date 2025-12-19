@@ -209,6 +209,7 @@ export const backend = {
             }
 
             const decoder = new TextDecoder();
+            let buffer = ''; // Buffer to accumulate incomplete messages
 
             // Read stream
             const processStream = async () => {
@@ -218,16 +219,31 @@ export const backend = {
 
                         if (done) break;
 
-                        // Decode chunk and split by lines
+                        // Decode chunk and add to buffer
                         const chunk = decoder.decode(value, { stream: true });
-                        const lines = chunk.split('\n');
+                        buffer += chunk;
+                        console.log('Buffer:', buffer);
 
-                        for (const line of lines) {
+                        // Split by SSE message delimiter (\r\n\r\n or \n\n for compatibility)
+                        // EventSourceResponse uses \r\n by default
+                        const messages = buffer.split(/\r\n\r\n|\n\n/);
+                        console.log('Messages:', messages);
+
+                        // Keep the last incomplete message in buffer
+                        buffer = messages.pop() || '';
+
+                        // Process complete messages
+                        for (const message of messages) {
                             if (isClosed) break;
+                            console.log('Processing SSE message:', message);
 
-                            if (line.startsWith('data: ')) {
-                                const dataStr = line.slice(6); // Remove "data: " prefix
+                            // Trim any remaining \r or \n from the message
+                            const trimmedMessage = message.trim();
+
+                            if (trimmedMessage.startsWith('data: ')) {
+                                const dataStr = trimmedMessage.slice(6); // Remove "data: " prefix
                                 try {
+                                    // ok, parse the JSON data
                                     const data = JSON.parse(dataStr);
 
                                     if (data.type === 'case_created') {
