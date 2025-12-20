@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useDataStore } from '../stores/DataStore';
+import { useUserStore } from '../stores/UserStore';
 import router from '../router';
 const data_store = useDataStore();
+const user_store = useUserStore();
 
 const onClickToggleSidebar = () => {
     data_store.flag_sidebar_open = !data_store.flag_sidebar_open;
@@ -63,13 +65,25 @@ const onClickCaseHistory = () => {
 
 
     <div class="flex flex-col gap-2 align-items-end">
-        <div class="menu-item"
+        <div v-if="user_store.isLoggedIn"
+            class="menu-item"
             @click="onClickUserProfile"
             v-tooltip.right="'View user profile'">
             <font-awesome-icon icon="fa-regular fa-user" />
             <div class="menu-item-text">
                 <span>
                     User Profile
+                </span>
+            </div>
+        </div>
+        <div v-else
+            class="menu-item"
+            @click="router.push('/login')"
+            v-tooltip.right="'Login to access more features'">
+            <font-awesome-icon icon="fa-regular fa-user" />
+            <div class="menu-item-text">
+                <span>
+                    Login
                 </span>
             </div>
         </div>

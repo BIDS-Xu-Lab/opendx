@@ -13,7 +13,7 @@ from pydantic import BaseModel, Field
 from sqlmodel import select
 import database
 from sqlmodel import Session
-from auth import get_current_user, get_user_id
+from auth import get_current_user, get_user_id, get_optional_user_id
 import httpx
 from sse_starlette import EventSourceResponse
 from dotenv import load_dotenv
@@ -56,7 +56,7 @@ class HistoryResponse(BaseModel):
     cases: list[dict]
 
 
-async def mock_event_generator(case_id: str, case_text: str, user_id: str, db: Session) -> AsyncGenerator[str, None]:
+async def mock_event_generator(case_id: str, case_text: str, user_id: Optional[str], db: Session) -> AsyncGenerator[str, None]:
     """
     Mock event generator that simulates agent responses without calling the AI model.
     Returns similar output format for development/testing.
@@ -64,23 +64,25 @@ async def mock_event_generator(case_id: str, case_text: str, user_id: str, db: S
     message_id_user = str(uuid.uuid4())
 
     try:
-        # Create case in database
-        database.create_case(db, case_id=case_id, user_id=user_id, title=case_text[:100])
-        database.update_case_status(db, case_id=case_id, status="PROCESSING")
+        # Only save to database if user is authenticated
+        if user_id:
+            # Create case in database
+            database.create_case(db, case_id=case_id, user_id=user_id, title=case_text[:100])
+            database.update_case_status(db, case_id=case_id, status="PROCESSING")
 
-        # Save user message
-        database.add_message(
-            db,
-            case_id=case_id,
-            user_id=user_id,
-            message_id=message_id_user,
-            message_data={
-                "from_id": user_id,
-                "message_type": "USER",
-                "text": case_text,
-                "stage": "final"
-            }
-        )
+            # Save user message
+            database.add_message(
+                db,
+                case_id=case_id,
+                user_id=user_id,
+                message_id=message_id_user,
+                message_data={
+                    "from_id": user_id,
+                    "message_type": "USER",
+                    "text": case_text,
+                    "stage": "final"
+                }
+            )
 
         # Emit initial event with case_id
         yield json.dumps({'type': 'case_created', 'case_id': case_id})
@@ -125,24 +127,25 @@ async def mock_event_generator(case_id: str, case_text: str, user_id: str, db: S
             ]
         }
 
-        # Save agent response message
-        message_id_agent = str(uuid.uuid4())
-        database.add_message(
-            db,
-            case_id=case_id,
-            user_id=user_id,
-            message_id=message_id_agent,
-            message_data={
-                "from_id": "agent",
-                "message_type": "AGENT",
-                "text": mock_result.get("overall_reasoning", ""),
-                "payload_json": mock_result,
-                "stage": "final"
-            }
-        )
+        # Save agent response message (only if authenticated)
+        if user_id:
+            message_id_agent = str(uuid.uuid4())
+            database.add_message(
+                db,
+                case_id=case_id,
+                user_id=user_id,
+                message_id=message_id_agent,
+                message_data={
+                    "from_id": "agent",
+                    "message_type": "AGENT",
+                    "text": mock_result.get("overall_reasoning", ""),
+                    "payload_json": mock_result,
+                    "stage": "final"
+                }
+            )
 
-        # Update case status
-        database.update_case_status(db, case_id=case_id, status="COMPLETED")
+            # Update case status
+            database.update_case_status(db, case_id=case_id, status="COMPLETED")
 
         # Send result event
         yield json.dumps({'type': 'result', 'data': mock_result})
@@ -150,7 +153,8 @@ async def mock_event_generator(case_id: str, case_text: str, user_id: str, db: S
     except Exception as e:
         error_msg = f"Mock error: {str(e)}"
         yield json.dumps({'type': 'error', 'message': error_msg})
-        database.update_case_status(db, case_id=case_id, status="ERROR")
+        if user_id:
+            database.update_case_status(db, case_id=case_id, status="ERROR")
 
 
 @app.get('/api/health')
@@ -162,12 +166,14 @@ async def health():
 @app.post('/api/chat')
 async def chat(
     request: ChatRequest,
-    user_id: str = Depends(get_user_id),
+    user_id: Optional[str] = Depends(get_optional_user_id),
     db: Session = Depends(get_db)
 ):
     """
     Chat endpoint with SSE streaming.
     Accepts clinical case text, calls agent service (or mock), and streams responses.
+    Works for both authenticated and anonymous users.
+    Anonymous users can chat but their history won't be saved.
     Set USE_MOCK_CHAT=true in environment to use mock implementation.
     """
     # Use mock implementation if enabled
@@ -181,23 +187,25 @@ async def chat(
         message_id_user = str(uuid.uuid4())
 
         try:
-            # Create case in database
-            database.create_case(db, case_id=case_id, user_id=user_id, title=request.case_text[:100])
-            database.update_case_status(db, case_id=case_id, status="PROCESSING")
+            # Only save to database if user is authenticated
+            if user_id:
+                # Create case in database
+                database.create_case(db, case_id=case_id, user_id=user_id, title=request.case_text[:100])
+                database.update_case_status(db, case_id=case_id, status="PROCESSING")
 
-            # Save user message
-            database.add_message(
-                db,
-                case_id=case_id,
-                user_id=user_id,
-                message_id=message_id_user,
-                message_data={
-                    "from_id": user_id,
-                    "message_type": "USER",
-                    "text": request.case_text,
-                    "stage": "final"
-                }
-            )
+                # Save user message
+                database.add_message(
+                    db,
+                    case_id=case_id,
+                    user_id=user_id,
+                    message_id=message_id_user,
+                    message_data={
+                        "from_id": user_id,
+                        "message_type": "USER",
+                        "text": request.case_text,
+                        "stage": "final"
+                    }
+                )
 
             # Emit initial event with case_id
             yield f"data: {json.dumps({'type': 'case_created', 'case_id': case_id})}\n\n"
@@ -239,24 +247,25 @@ async def chat(
                                 elif data.get("type") == "result":
                                     result_data = data.get("data", {})
 
-                                    # Save agent response message
-                                    message_id_agent = str(uuid.uuid4())
-                                    database.add_message(
-                                        db,
-                                        case_id=case_id,
-                                        user_id=user_id,
-                                        message_id=message_id_agent,
-                                        message_data={
-                                            "from_id": "agent",
-                                            "message_type": "AGENT",
-                                            "text": result_data.get("overall_reasoning", ""),
-                                            "payload_json": result_data,
-                                            "stage": "final"
-                                        }
-                                    )
+                                    # Save agent response message (only if authenticated)
+                                    if user_id:
+                                        message_id_agent = str(uuid.uuid4())
+                                        database.add_message(
+                                            db,
+                                            case_id=case_id,
+                                            user_id=user_id,
+                                            message_id=message_id_agent,
+                                            message_data={
+                                                "from_id": "agent",
+                                                "message_type": "AGENT",
+                                                "text": result_data.get("overall_reasoning", ""),
+                                                "payload_json": result_data,
+                                                "stage": "final"
+                                            }
+                                        )
 
-                                    # Update case status
-                                    database.update_case_status(db, case_id=case_id, status="COMPLETED")
+                                        # Update case status
+                                        database.update_case_status(db, case_id=case_id, status="COMPLETED")
 
                                     # Forward result to frontend
                                     yield f"data: {json.dumps(data)}\n\n"
@@ -268,15 +277,18 @@ async def chat(
         except httpx.TimeoutException:
             error_msg = "Agent service timeout"
             yield f"data: {json.dumps({'type': 'error', 'message': error_msg})}\n\n"
-            database.update_case_status(db, case_id=case_id, status="ERROR")
+            if user_id:
+                database.update_case_status(db, case_id=case_id, status="ERROR")
         except httpx.RequestError as e:
             error_msg = f"Agent service unreachable: {str(e)}"
             yield f"data: {json.dumps({'type': 'error', 'message': error_msg})}\n\n"
-            database.update_case_status(db, case_id=case_id, status="ERROR")
+            if user_id:
+                database.update_case_status(db, case_id=case_id, status="ERROR")
         except Exception as e:
             error_msg = f"Internal error: {str(e)}"
             yield f"data: {json.dumps({'type': 'error', 'message': error_msg})}\n\n"
-            database.update_case_status(db, case_id=case_id, status="ERROR")
+            if user_id:
+                database.update_case_status(db, case_id=case_id, status="ERROR")
 
     return EventSourceResponse(event_generator())
 

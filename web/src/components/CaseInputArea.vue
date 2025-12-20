@@ -3,28 +3,26 @@ import { ref } from 'vue';
 import router from '../router';
 import { questions, clinical_cases } from '../models/Samples';
 import { useCaseStore } from '../stores/CaseStore';
-import { MessageType } from '../models/ClinicalCase';
-const input_text = ref('');
-const el_textarea = ref(null);
+
 const n_rows = ref(1);
 const case_store = useCaseStore();
 
 const onClickSubmit = () => {
     // Check if user has entered text
-    if (!input_text.value.trim()) {
+    if (!case_store.input_text.trim()) {
         console.warn('No input text provided');
         return;
     }
 
     // Clear any existing case
-    case_store.setClinicalCase(null);
+    // case_store.setClinicalCase(null);
 
     // Start the streaming process with user's input
-    const caseText = input_text.value.trim();
+    const caseText = case_store.input_text.trim();
     case_store.startStream(caseText);
 
     // Clear the input
-    input_text.value = '';
+    case_store.input_text = '';
     n_rows.value = 1;
 
     // Navigate to analyze page
@@ -32,7 +30,7 @@ const onClickSubmit = () => {
 }
 
 const onClickSample = (sample: any) => {
-    input_text.value = sample.text;
+    case_store.input_text = sample.text;
 
     onInputTextarea();
 }
@@ -48,7 +46,7 @@ const onClickRecord = () => {
 const onInputTextarea = () => {
     // get the number of characters in the textarea
 
-    const n_chars = input_text.value.length;
+    const n_chars = case_store.input_text.length;
 
     // set the number of rows to the number of characters / 60
     let n = Math.ceil(n_chars / 60);
@@ -63,6 +61,7 @@ const onInputTextarea = () => {
 }
 
 const flag_show_more_samples = ref(false);
+
 const onClickSeeMore = () => {
     flag_show_more_samples.value = !flag_show_more_samples.value;
 }
@@ -86,7 +85,7 @@ const get_samples = () => {
                 ref="el_textarea"
                 id="input-textarea"
                 wrap="soft"
-                v-model="input_text"
+                v-model="case_store.input_text"
                 :rows="n_rows"
                 class="input-textarea w-full p-4 resize-none border-0 focus:outline-none"
                 placeholder="Describe your question related mCRPC guideline ..."

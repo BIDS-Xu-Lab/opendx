@@ -4,7 +4,7 @@ JWT authentication middleware for Supabase.
 import os
 import jwt
 from typing import Optional
-from fastapi import HTTPException, Security, Depends
+from fastapi import HTTPException, Security, Depends, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
 
@@ -82,3 +82,45 @@ def get_user_id(user: dict = Depends(get_current_user)) -> str:
         str: The user ID (Supabase user UUID)
     """
     return user["sub"]
+
+
+def get_optional_user_id(request: Request) -> Optional[str]:
+    """
+    FastAPI dependency to optionally extract user ID from JWT token.
+    Returns None if no token is provided (for anonymous users).
+
+    Usage in endpoints:
+        @app.get("/public")
+        async def public_route(user_id: Optional[str] = Depends(get_optional_user_id)):
+            if user_id:
+                # Authenticated user
+                ...
+            else:
+                # Anonymous user
+                ...
+
+    Returns:
+        Optional[str]: The user ID if authenticated, None otherwise
+    """
+    # Get authorization header from request
+    auth_header = request.headers.get("Authorization")
+
+    if not auth_header:
+        return None
+
+    # Check if it's a Bearer token
+    if not auth_header.startswith("Bearer "):
+        return None
+
+    # Extract token
+    token = auth_header[7:]  # Remove "Bearer " prefix
+
+    try:
+        payload = verify_jwt_token(token)
+        return payload["sub"]
+    except HTTPException:
+        # Invalid token - treat as anonymous
+        return None
+    except Exception:
+        # Any other error - treat as anonymous
+        return None

@@ -111,8 +111,6 @@ onMounted(() => {
 <LeftSidebar />
 <div class="main-container">
 
-    <TopMenu />
-
     <div class="w-3/4 mx-auto mt-4">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold">Case History</h1>

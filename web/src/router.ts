@@ -14,7 +14,7 @@ const routes = [
     {
         path: '/analyze',
         component: Analyze,
-        meta: { requiresAuth: true }  // This route requires authentication
+        meta: { requiresAuth: false }  // This route requires authentication
     },
     {
         path: '/analyze/:case_id',
