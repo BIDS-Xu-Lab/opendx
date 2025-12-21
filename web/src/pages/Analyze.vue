@@ -180,47 +180,49 @@ onBeforeUnmount(() => {
         </div>
         </div>
     </div>
-</div>
 
-<!-- Chat Footer -->
-<div class="chat-footer w-full border-t pl-4 pr-2 py-4">
-    <div class="flex flex-col gap-2">
-        <!-- Input area -->
-        <Textarea
-            v-model="case_store.input_text"
-            :placeholder="isInputDisabled ? 'This case has been submitted.' : 'Type your clinical case here...'"
-            :auto-resize="true"
-            :disabled="isInputDisabled"
-            rows="1"
-            style="max-height: 10rem;"
-            class="w-full"
-            @keydown.enter.prevent="handleSubmitMessage" />
 
-        <!-- Action buttons -->
-        <div class="flex justify-between items-center">
-            <div class="flex gap-2">
-                <!-- <Button
-                    v-if="case_store.messages.length > 0"
-                    icon="pi pi-download"
-                    size="small"
-                    label="Export Chat"
-                    class="p-button-text"
-                    @click="case_store.exportChatHistory()" />
-                <Button
-                    v-if="case_store.messages.length > 0"
-                    :icon="case_store.show_thinking ? 'pi pi-eye-slash' : 'pi pi-eye'"
-                    size="small"
-                    :label="case_store.show_thinking ? 'Hide Thinking' : 'Show Thinking'"
-                    class="p-button-text"
-                    @click="case_store.toggleThinking()" /> -->
-            </div>
-            <div class="flex gap-2">
-                <Button
-                    icon="pi pi-send"
-                    size="small"
-                    :disabled="isInputDisabled || !case_store.input_text.trim()"
-                    :loading="case_store.is_streaming"
-                    @click="handleSubmitMessage" />
+
+    <!-- Chat Footer -->
+    <div class="chat-footer w-full border-t pl-4 pr-2 py-4">
+        <div class="flex flex-col gap-2">
+            <!-- Input area -->
+            <Textarea
+                v-model="case_store.input_text"
+                :placeholder="isInputDisabled ? 'This case has been submitted.' : 'Type your clinical case here...'"
+                :auto-resize="true"
+                :disabled="isInputDisabled"
+                rows="1"
+                style="max-height: 10rem;"
+                class="w-full"
+                @keydown.enter.prevent="handleSubmitMessage" />
+
+            <!-- Action buttons -->
+            <div class="flex justify-between items-center">
+                <div class="flex gap-2">
+                    <!-- <Button
+                        v-if="case_store.messages.length > 0"
+                        icon="pi pi-download"
+                        size="small"
+                        label="Export Chat"
+                        class="p-button-text"
+                        @click="case_store.exportChatHistory()" />
+                    <Button
+                        v-if="case_store.messages.length > 0"
+                        :icon="case_store.show_thinking ? 'pi pi-eye-slash' : 'pi pi-eye'"
+                        size="small"
+                        :label="case_store.show_thinking ? 'Hide Thinking' : 'Show Thinking'"
+                        class="p-button-text"
+                        @click="case_store.toggleThinking()" /> -->
+                </div>
+                <div class="flex gap-2">
+                    <Button
+                        icon="pi pi-send"
+                        size="small"
+                        :disabled="isInputDisabled || !case_store.input_text.trim()"
+                        :loading="case_store.is_streaming"
+                        @click="handleSubmitMessage" />
+                </div>
             </div>
         </div>
     </div>
@@ -248,7 +250,7 @@ onBeforeUnmount(() => {
 
 .chat-footer {
     max-width: 60rem;
-    position: fixed;
+    position: absolute;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
