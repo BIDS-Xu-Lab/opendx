@@ -4,17 +4,17 @@ import Aura from '@primeuix/themes/aura';
 export const my_preset_theme = definePreset(Aura, {
     semantic: {
         primary: {
-            50: '{rose.50}',
-            100: '{rose.100}',
-            200: '{rose.200}',
-            300: '{rose.300}',
-            400: '{rose.400}',
-            500: '{rose.500}',
-            600: '{rose.600}',
-            700: '{rose.700}',
-            800: '{rose.800}',
-            900: '{rose.900}',
-            950: '{rose.950}'
+            50: '{amber.50}',
+            100: '{amber.100}',
+            200: '{amber.200}',
+            300: '{amber.300}',
+            400: '{amber.400}',
+            500: '{amber.500}',
+            600: '{amber.600}',
+            700: '{amber.700}',
+            800: '{amber.800}',
+            900: '{amber.900}',
+            950: '{amber.950}'
         },
         colorScheme: {
             light: {

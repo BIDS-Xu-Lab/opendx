@@ -7,7 +7,7 @@ export const useCaseStore = defineStore('case', {
     state: () => ({
         clinical_case: null as ClinicalCase | null,
         input_text: '',
-        show_thinking: false,
+        show_thinking: true,
 
         // Streaming state
         is_streaming: false,
@@ -92,17 +92,15 @@ export const useCaseStore = defineStore('case', {
                     caseText,
                     // onProgress:
                     (message: string) => {
-                        if (this.show_thinking) {
-                            const progressMessage = createEmptyMessage(
-                                'system',
-                                MessageType.SYSTEM,
-                                message,
-                                {},
-                                MessageStage.THINKING
-                            );
-                            this.addMessage(progressMessage);
-                            this.stream_updated_at = new Date().toISOString();
-                        }
+                        const progressMessage = createEmptyMessage(
+                            'system',
+                            MessageType.SYSTEM,
+                            message,
+                            {},
+                            MessageStage.THINKING
+                        );
+                        this.addMessage(progressMessage);
+                        this.stream_updated_at = new Date().toISOString();
                     },
                     // onResult:
                     (data: any) => {

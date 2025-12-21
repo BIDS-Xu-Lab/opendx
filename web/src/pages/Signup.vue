@@ -104,7 +104,7 @@ async function onClickSignUp() {
                     Create Your Account
                 </div>
                 <p class="text-sm text-center text-surface-600 dark:text-surface-400">
-                    Join OpenMDX to start analyzing clinical cases
+                    Join OpenDx to start analyzing clinical cases
                 </p>
             </div>
         </div>
@@ -202,7 +202,7 @@ async function onClickSignUp() {
         </div>
 
         <div class="text-xs text-surface-500 dark:text-surface-400 text-center">
-            By creating an account, you agree to receive email confirmations and updates from OpenMDX.
+            By creating an account, you agree to receive email confirmations and updates from OpenDx.
         </div>
     </div>
 </div>

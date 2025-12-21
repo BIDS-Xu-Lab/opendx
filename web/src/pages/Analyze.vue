@@ -90,7 +90,8 @@ onMounted(async () => {
         }
     } else {
         // Start with empty case for new sessions
-        case_store.setClinicalCase(null);
+        // user can just go to this page or redirect from another page
+        // so do nothing here
     }
 
     // Scroll to bottom on initial mount
@@ -111,22 +112,10 @@ onBeforeUnmount(() => {
     <div class="main-content">
         <!-- Chat Body -->
         <div class="chat-body p-4 w-full">
-        <template v-for="message in case_store.messages" :key="message.message_id">
+        <template v-for="message, message_idx in case_store.messages" :key="message.message_id">
             <!-- User Message -->
             <div v-if="message.message_type === MessageType.USER"
                 class="message-item user-message">
-                <div class="message-header flex justify-between items-center gap-2">
-                    <div class="flex items-center gap-2">
-                        <span class="font-medium text-sm">
-                            <font-awesome-icon icon="fa-solid fa-user" />
-                            You
-                        </span>
-                        <span class="text-xs text-gray-500">
-                            {{ new Date(message.created_at).toLocaleTimeString() }}
-                        </span>
-                    </div>
-                </div>
-
                 <div class="message-content prose max-w-none text-base/6"
                     v-html="renderMessageText(message.text || '')">
                 </div>
@@ -139,7 +128,7 @@ onBeforeUnmount(() => {
                     <div class="flex items-center gap-2">
                         <span class="font-medium text-sm">
                             <font-awesome-icon icon="fa-solid fa-check-circle" />
-                            AI Response
+                            Result
                         </span>
                     </div>
 
@@ -150,15 +139,8 @@ onBeforeUnmount(() => {
                     </div>
                 </div>
 
-                <div class="message-content prose max-w-none text-base/6 p-4">
-                    <div v-if="case_store.is_streaming && !message.text" class="typing-indicator">
-                        <span class="typing-dot"></span>
-                        <span class="typing-dot"></span>
-                        <span class="typing-dot"></span>
-                    </div>
-                    <div v-else
-                        v-html="renderMessageText(message.text || '')">
-                    </div>
+                <div class="message-content prose max-w-none text-base/6 p-4"
+                    v-html="renderMessageText(message.text || '')">
                 </div>
             </div>
 
@@ -166,11 +148,21 @@ onBeforeUnmount(() => {
             <div v-else-if="message.message_type === MessageType.SYSTEM && case_store.show_thinking"
                 class="message-item system-message">
                 <div class="message-content text-sm text-gray-600 dark:text-gray-400 italic">
-                    <font-awesome-icon icon="fa-solid fa-circle-notch" class="animate-spin mr-2" />
+                    <font-awesome-icon v-if="message_idx == case_store.messages.length - 1"
+                        icon="fa-regular fa-circle" class="mr-2" />
+                    <font-awesome-icon v-else
+                        icon="fa-solid fa-circle-check" class="mr-2" />
                     {{ message.text }}
                 </div>
             </div>
         </template>
+
+
+        <div v-if="case_store.is_streaming" class="typing-indicator ml-2">
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+        </div>
 
         <!-- Empty state -->
         <div v-if="case_store.messages.length === 0"
@@ -207,7 +199,7 @@ onBeforeUnmount(() => {
         <!-- Action buttons -->
         <div class="flex justify-between items-center">
             <div class="flex gap-2">
-                <Button
+                <!-- <Button
                     v-if="case_store.messages.length > 0"
                     icon="pi pi-download"
                     size="small"
@@ -220,7 +212,7 @@ onBeforeUnmount(() => {
                     size="small"
                     :label="case_store.show_thinking ? 'Hide Thinking' : 'Show Thinking'"
                     class="p-button-text"
-                    @click="case_store.toggleThinking()" />
+                    @click="case_store.toggleThinking()" /> -->
             </div>
             <div class="flex gap-2">
                 <Button
@@ -271,7 +263,7 @@ onBeforeUnmount(() => {
 }
 
 .message-header {
-    height: 2rem;
+    height: 3rem;
 }
 
 .message-toolbar {
@@ -285,7 +277,14 @@ onBeforeUnmount(() => {
 
 .user-message {
     margin-bottom: 2rem;
-    border-bottom: 2px solid var(--border-color);
+    display: flex;
+    align-items: flex-end;
+}
+.user-message .message-content {
+    width: 80%;
+    border-radius: 8px;
+    padding: 1rem;
+    background-color: var(--user-message-background-color);
 }
 
 .agent-message {
@@ -294,7 +293,6 @@ onBeforeUnmount(() => {
 
 .system-message {
     margin-left: 1rem;
-    margin-bottom: 0.5rem;
 }
 
 .empty-state {

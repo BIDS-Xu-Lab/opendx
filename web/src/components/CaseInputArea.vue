@@ -94,22 +94,22 @@ const get_samples = () => {
             ></textarea>
             <div class="flex flex-row justify-between align-items-center">
                 <div class="flex flex-row gap-2 align-items-center">
-                    <Button text @click="onClickUpload" 
+                    <!-- <Button text @click="onClickUpload" 
                         v-tooltip.bottom="'Upload a clinical case file, e.g. a PDF, a Markdown, or a text file'"
                         class="!p-2 !h-10">
                         <font-awesome-icon icon="fa-solid fa-upload" class="text-2xl"/>
-                    </Button>
+                    </Button> -->
                 </div>
 
                 <div class="flex flex-row gap-2 align-items-center">
-                    <Button text @click="onClickRecord" 
+                    <!-- <Button text @click="onClickRecord" 
                         v-tooltip.bottom="'Speak your clinical case or question'"
                         class="!p-2 !h-10">
                         <font-awesome-icon icon="fa-solid fa-microphone" class="text-2xl"/>
-                    </Button>
+                    </Button> -->
                     <Button @click="onClickSubmit" 
                         v-tooltip.bottom="'Submit your clinical case or question'"
-                        class="!p-2 !h-10">
+                        class="p-2! h-10!">
                         <font-awesome-icon icon="fa-solid fa-paper-plane" class="text-2xl"/>
                     </Button>
                 </div>
@@ -118,7 +118,7 @@ const get_samples = () => {
     </div>
 
     <!-- Samples -->
-    <!-- <div class="flex lg:flex-row max-sm:flex-col gap-4 mb-2 lg:w-1/2">
+    <div class="flex lg:flex-row max-sm:flex-col gap-4 mb-2 lg:w-1/2">
 
         <Card v-for="sample in get_samples()" 
             class="lg:w-1/3 cursor-pointer clickable-sample"
@@ -132,7 +132,7 @@ const get_samples = () => {
                 </p>
             </template>
         </Card>
-    </div> -->
+    </div>
 
 
     <!-- More samples -->

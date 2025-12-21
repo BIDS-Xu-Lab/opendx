@@ -24,7 +24,8 @@
 
   --footer-background-color: rgb(24, 24, 24);
   --highlight-background-color: rgb(26, 43, 48);
-  --highlight-color: rgb(195, 96, 56);
+  --highlight-color: rgb(15, 86, 145);
+  --user-message-background-color: rgb(65, 64, 58);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -43,7 +44,8 @@
 
     --footer-background-color: rgb(240, 240, 240);
     --highlight-background-color: rgb(239, 246, 255);
-    --highlight-color: rgb(216, 73, 33);
+    --highlight-color: rgb(30, 95, 152);
+    --user-message-background-color: rgb(255 251 230);
   }
 }
 

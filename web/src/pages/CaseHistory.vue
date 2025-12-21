@@ -158,11 +158,12 @@ onMounted(() => {
             </thead>
             <tbody>
                 <tr v-for="cc in cases" :key="cc.case_id"
-                    class="h-12 border-b hover:bg-gray-50">
+                    class="h-12 border-b light:hover:bg-gray-50 dark:hover:bg-gray-700">
                     <td class="text-sm">
                         {{ formatDate(cc.created_at) }}
                     </td>
-                    <td class="font-medium">
+                    <td class="font-medium cursor-pointer"
+                            @click="$router.push(`/analyze/${cc.case_id}`)">
                         {{ cc.title || 'Untitled Case' }}
                     </td>
                     <td>
@@ -225,22 +226,18 @@ onMounted(() => {
 }
 
 .status-created {
-    background-color: #e3f2fd;
     color: #1976d2;
 }
 
 .status-processing {
-    background-color: #fff3e0;
     color: #f57c00;
 }
 
 .status-completed {
-    background-color: #e8f5e9;
     color: #388e3c;
 }
 
 .status-error {
-    background-color: #ffebee;
     color: #d32f2f;
 }
 </style>
