@@ -78,7 +78,7 @@ const renderFinalMessage = (message: Message) => {
     if (payload.actions && Array.isArray(payload.actions)) {
         resultText += '### Recommended Actions\n';
         payload.actions.forEach((action: string, idx: number) => {
-            resultText += `${idx + 1}. ${action}\n`;
+            resultText += `${action}\n\n`;
         });
         resultText += '\n\n';
     }
