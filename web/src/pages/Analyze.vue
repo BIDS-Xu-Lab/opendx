@@ -40,6 +40,52 @@ const renderMessageText = (text: string) => {
     return marked.parse(text);
 };
 
+const renderFinalMessage = (message: Message) => {
+    // just use the payload_json to generate the final message
+    const payload = message.payload_json;
+
+    if (!payload) {
+        return renderMessageText('No result available.');
+    }
+
+    let resultText = '';
+
+    // first, get the predictions
+    if (payload.predictions && Array.isArray(payload.predictions)) {
+        resultText += '### Predictions\n';
+        payload.predictions.forEach((pred: string, idx: number) => {
+            resultText += `${idx + 1}. ${pred}\n`;
+        });
+        resultText += '\n\n';
+    }
+
+    // then, the warning_diagnosis
+    if (payload.warning_diagnosis && Array.isArray(payload.warning_diagnosis)) {
+        resultText += '### Warning Diagnosis\n';
+        payload.warning_diagnosis.forEach((warn: string, idx: number) => {
+            resultText += `${idx + 1}. ${warn}\n`;
+        });
+        resultText += '\n\n';
+    }
+
+    // then, the overall_reasoning
+    if (payload.overall_reasoning && typeof payload.overall_reasoning === 'string') {
+        resultText += '### Overall Reasoning\n';
+        resultText += `${payload.overall_reasoning}\n\n`;
+    }
+
+    // then, actions
+    if (payload.actions && Array.isArray(payload.actions)) {
+        resultText += '### Recommended Actions\n';
+        payload.actions.forEach((action: string, idx: number) => {
+            resultText += `${idx + 1}. ${action}\n`;
+        });
+        resultText += '\n\n';
+    }
+
+    return marked.parse(resultText);
+};
+
 const copyMessageToClipboard = (message: Message) => {
     navigator.clipboard.writeText(message.text || '');
     toast.add({
@@ -60,15 +106,15 @@ const scrollToBottom = () => {
 };
 
 // Watch stream updates for typing animation
-watch(() => case_store.stream_updated_at, async () => {
-    await nextTick();
-    scrollToBottom();
-});
+// watch(() => case_store.stream_updated_at, async () => {
+//     await nextTick();
+//     scrollToBottom();
+// });
 
-watch(() => case_store.messages.length, async () => {
-    await nextTick();
-    scrollToBottom();
-});
+// watch(() => case_store.messages.length, async () => {
+//     await nextTick();
+//     scrollToBottom();
+// });
 
 // Initialize case data
 onMounted(async () => {
@@ -140,7 +186,7 @@ onBeforeUnmount(() => {
                 </div>
 
                 <div class="message-content prose max-w-none text-base/6 p-4"
-                    v-html="renderMessageText(message.text || '')">
+                    v-html="renderFinalMessage(message)">
                 </div>
             </div>
 
@@ -250,7 +296,7 @@ onBeforeUnmount(() => {
 
 .chat-footer {
     max-width: 60rem;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);

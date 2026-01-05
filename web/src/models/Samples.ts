@@ -7,6 +7,24 @@ import type { ClinicalCase, EvidenceSnippet, Message } from "./ClinicalCase";
 
 export const questions = [
     {
+        section: "Ask a Tough Question",
+        text: `A 78-year-old woman presented to the emergency department with a sore throat. She reported painful swallowing and a sensation of something stuck in her throat that had gradually developed over the course of the day. She denied having ingested a foreign body. She had no fever, congestion, cough, dyspnea, dysphagia, or prior similar episodes.
+
+Her past medical history was notable for hypertension, hyperlipidemia, diabetes, and hypothyroidism. Ten years earlier, she had undergone anterior cervical spine fusion. On arrival, her vital signs were: blood pressure 168/77 mmHg, pulse 90 beats/min, respiratory rate 16 breaths/min, and temperature 36.8 °C. Examination revealed normal neck range of motion but tenderness along the mid-anterior neck without edema, mass, thyroid enlargement, or posterior oropharyngeal abnormality. She exhibited no stridor, hoarseness, drooling, sublingual swelling, or respiratory distress. Neurological examination was intact. The clinician noted she felt warm to the touch, and a repeat temperature check was ordered along with a soft tissue neck radiograph to evaluate the prior hardware and surrounding structures.
+
+Shortly after arrival, the patient developed rigors, and repeat vitals showed fever. Given the combination of odynophagia, anterior neck tenderness, and new fever, laboratory evaluation was obtained. Results showed a WBC count of 26.3 × 10³/μL and lactate 2.1 mmol/L. The soft tissue neck radiograph was read as normal by the radiologist, but the treating physician noted possible prevertebral widening, hardware displacement, and a questionable air–fluid level, raising concern for a deep neck infection. Empiric antibiotics and antipyretics were started.
+
+CT neck with intravenous contrast demonstrated a peripherally enhancing fluid collection in the prevertebral space extending from C4/C5 to T1, measuring 2.4 × 1.5 × 4.2 cm. The collection was associated with surrounding inflammatory changes, small locules of gas within the prevertebral compartment, and retraction of the right C6 anterior plate screw compared to prior imaging. Inflammatory changes extended laterally toward the carotid spaces. The impression was of a prevertebral abscess potentially related to cervical hardware complications. Neurosurgery, otolaryngology, and cardiothoracic surgery were consulted.
+
+Magnetic resonance imaging confirmed the prevertebral fluid collection and soft tissue changes but did not show vertebral body destruction or spinal canal involvement. A bedside nasopharyngeal scope revealed no mucosal lesions, and a fluoroscopic esophagram did not demonstrate a definite leak.
+
+The patient was taken to the operating room for irrigation and drainage of the prevertebral collection and removal of the cervical plate hardware. During surgery, a defect in the adjacent soft tissue planes was repaired. Cultures grew Streptococcus salivarius vestibularis, Streptococcus viridans, and Corynebacterium species. The patient was admitted to the ICU and discharged six days later, neurologically intact, with a peripherally inserted central catheter for continued intravenous antibiotics.
+
+Figure 1. Soft tissue neck radiograph with prevertebral soft tissue prominence extending from C3 to T1. Red arrow: anterior cervical screw retraction. Blue arrow: subtle air–fluid interface in the prevertebral region.
+
+Figure 2. Contrast-enhanced CT neck showing a rim-enhancing prevertebral fluid collection extending from C4/C5 to T1, with associated inflammatory changes extending into the carotid spaces. Retraction of the right C6 anterior plate screw is also noted. Arrow: area of fluid collection.`
+    },
+    {
         section: "Ask for a Quick Fact",
         text: "What is the intravenous half-life of atropine?",
     },
@@ -342,7 +360,7 @@ export const questions = [
         section: "Ask a Tough Question",
         text:
             "How should clinicians weigh anticoagulation risks and benefits in an elderly patient with AF, frequent falls, and a recent GI bleed?",
-    },
+    }
 ];
 
 // Sample Clinical Case: Complex Heart Failure with Multiple Comorbidities (revised)

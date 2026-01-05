@@ -29,6 +29,13 @@ const onClickSubmit = () => {
     router.push('/analyze');
 }
 
+const cutContent = (text: string, maxLength: number) => {
+    if (text.length <= maxLength) {
+        return text;
+    }
+    return text.slice(0, maxLength) + '...';
+}
+
 const onClickSample = (sample: any) => {
     case_store.input_text = sample.text;
 
@@ -69,7 +76,7 @@ const onClickSeeMore = () => {
 const get_samples = () => {
     // get fixed 3 samples with index
     return [
-        questions[2],
+        questions[0],
         questions[8],
         questions[20],
     ];
@@ -128,7 +135,7 @@ const get_samples = () => {
             </template>
             <template #content>
                 <p class="m-0">
-                    {{ sample?.text }}
+                    {{ cutContent(sample?.text || '', 150) }}
                 </p>
             </template>
         </Card>
@@ -160,6 +167,11 @@ const get_samples = () => {
 </template>
 
 <style scoped>
+.clickable-sample {
+    padding-bottom: 0.5em;
+    max-height: 12em;
+    overflow: hidden;
+}
 .clickable-sample:hover {
     background: var(--hover-color);
 }
