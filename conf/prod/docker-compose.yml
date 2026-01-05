@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # Backend API service
+  api:
+    build:
+      context: ../../api
+      dockerfile: ../conf/prod/dockerfile.api
+    container_name: opendx-api
+    ports:
+      - "9627:9627"
+    restart: unless-stopped
+    environment:
+      - TZ=UTC
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:9627/').read()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - opendx-network
+
+  # Frontend web service
+  web:
+    build:
+      context: ../../
+      dockerfile: conf/prod/dockerfile.web
+      args:
+        - WEB_DIR=web
+        - NGINX_CONF=conf/prod/nginx.conf
+    container_name: opendx-web
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    networks:
+      - opendx-network
+
+networks:
+  opendx-network:
+    driver: bridge

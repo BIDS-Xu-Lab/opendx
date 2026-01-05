@@ -1,0 +1,49 @@
+# Dependencies
+web/node_modules
+api/__pycache__
+api/.pytest_cache
+api/*.pyc
+api/*.pyo
+api/*.pyd
+
+# Build outputs
+web/dist
+web/.vite
+
+# Development files
+web/.vscode
+web/.idea
+api/.vscode
+api/.idea
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation (not needed in container)
+*.md
+!web/README.md
+!api/README.md
+
+# Logs
+*.log
+web/npm-debug.log*
+web/yarn-debug.log*
+web/yarn-error.log*
+
+# Testing
+web/coverage
+api/coverage
+api/.coverage
+
+# Misc
+.env.local
+.env.*.local
+*.swp
+*.swo
+*~
